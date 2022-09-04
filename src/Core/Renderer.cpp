@@ -182,6 +182,23 @@ namespace nmGfx
         _window.UnbindFramebuffer();
     }
 
+    int Renderer::Get2DPickID(int x, int y)
+    {
+        int id = 0;
+        glReadBuffer(GL_COLOR_ATTACHMENT1);
+        glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &id);
+        return id;
+    }
+
+    int Renderer::Get2DPickIDSafe(int x, int y)
+    {
+        _data2d._frameBuffer.Use();
+        int id = Get2DPickID(x, y);
+        _window.UnbindFramebuffer();
+
+        return id;
+    }
+
     void Renderer::DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, const glm::vec3& tint /*= glm::vec3(1.f)*/, int drawID /*= 0*/)
     {
         _data2d._shader.UniformMat4("uModel", transform);

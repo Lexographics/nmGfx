@@ -45,17 +45,18 @@ int main(int argc, char const *argv[])
 
         renderer.Begin3D(nmGfx::CalculatePerspective((float)window.GetVideoWidth() / (float)window.GetVideoHeight(), 60.f, 0.1f, 500.f), camera);
         renderer.DrawModel(model, nmGfx::CalculateModelMatrix({0.f, 0.f, 0.f}, {90.f, 180.f, 0.f}, {1.f, 1.f, 1.f}), mat, 12);
-        // printf("ID: %i\n", renderer.Get3DPickID(window.GetVideoMousePosX(), window.GetVideoHeight() - window.GetVideoMousePosY()));
+        // printf("3D ID: %i\n", renderer.Get3DPickID(window.GetVideoMousePosX(), window.GetVideoHeight() - window.GetVideoMousePosY()));
         renderer.End3D();
 
         
         renderer.Begin2D(nmGfx::CalculateModelMatrix({0.f, 0.f, 1.f}, {.0f, .0f, t*10}, {1.f, 1.f, 1.f}));
         renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({-200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {0.f, 1.f, 1.f}, 13);
         renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {1.f, 0.f, 1.f}, 14);
+
+        // printf("2D ID: %i\n", renderer.Get2DPickID(window.GetVideoMousePosX(), window.GetVideoHeight() - window.GetVideoMousePosY()));
         renderer.End2D();
 
         t += 0.01f;
-        // printf("%f\n", t);
 
         renderer.ClearLayers();
         renderer.Draw3DLayer();

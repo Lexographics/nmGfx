@@ -57,7 +57,7 @@ namespace nmGfx
         int Get3DPickID(int x, int y);
 
         /**
-         * @brief Returns id of given x, y coordinate in 3d space. can be called outside of a context
+         * @brief Returns id of given x, y coordinate in 3d space. must be called outside of a context
          * 
          * @param x 
          * @param y 
@@ -85,6 +85,24 @@ namespace nmGfx
         void Begin2D(const glm::mat4 cameraTransform);
         void End2D();
 
+        /**
+         * @brief Returns id of given x, y coordinate in 2d space !Must be called within 2d context(Between Begin2D-End2D block)
+         * 
+         * @param x 
+         * @param y 
+         * @return int id
+         */
+        int Get2DPickID(int x, int y);
+
+        /**
+         * @brief Returns id of given x, y coordinate in 2d space. must be called outside of a context
+         * 
+         * @param x 
+         * @param y 
+         * @return int id
+         */
+        int Get2DPickIDSafe(int x, int y);
+
         void DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, const glm::vec3& tint = glm::vec3(1.f), int drawID = 0);
 
         /**
@@ -96,12 +114,7 @@ namespace nmGfx
     private:
         Window _window{};
 
-        // Model _model2d;
-        // Shader _shader2d;
         Texture _whiteTexture;
-
-        // Model _lightModel;
-        // Shader _lightShader;
 
         Model _fullscreenModel;
         Shader _fullscreenShader;
