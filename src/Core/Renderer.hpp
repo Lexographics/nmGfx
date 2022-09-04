@@ -33,6 +33,12 @@ namespace nmGfx
         ~Renderer();
 
         /**
+         * @brief Call before drawing 2d/3d layers
+         * 
+         */
+        void ClearLayers();
+
+        /**
          * @brief Begin 3D context, use shaders, calculate matrices
          * 
          * @param projectionMatrix
@@ -69,6 +75,24 @@ namespace nmGfx
 
         void DrawModel(const Model& model, const glm::mat4& transform, const Material& material, int drawID = 0);
 
+
+        /**
+         * @brief Begin 2D context, use shaders, calculate matrices (camera is on center)
+         * 
+         * @param projectionMatrix
+         * @param cameraTransform Camera transform (NOT view matrix)
+         */
+        void Begin2D(const glm::mat4 cameraTransform);
+        void End2D();
+
+        void DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, int drawID = 0);
+
+        /**
+         * @brief Draws 2d layer on full screen
+         * 
+         */
+        void Draw2DLayer();
+
     private:
         Window _window{};
 
@@ -91,6 +115,16 @@ namespace nmGfx
 
             Shader _shader;
         } _data3d;
+
+        struct {
+            Model _model2d;
+            Framebuffer _frameBuffer;
+
+            glm::mat4 _projectionMatrix;
+            glm::mat4 _viewMatrix;
+
+            Shader _shader;
+        } _data2d;
     };
     
 } // namespace nmGfx
