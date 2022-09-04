@@ -21,9 +21,9 @@ namespace nmGfx
 
             
             // Setting values directly with pixel values
-            void SetWidth(int width) { _width = width; }
-            void SetHeight(int height) { _height = height; }
-            void SetChannels(int height) { _height = height; }
+            inline int GetWidth()  { return _width; }
+            inline int GetHeight()  { return _height; }
+            inline int GetChannels()  { return _channels; }
             // Loads from raw pixel data
             void LoadFromData(unsigned char* data, int width, int height, int channels, TextureType type = TextureType::TEXTURE2D);
         private:
