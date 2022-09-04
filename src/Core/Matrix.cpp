@@ -46,4 +46,24 @@ namespace nmGfx
     {
         return CalculateModelMatrix({position.x, position.y, 0.f}, {0.f, 0.f, rotation}, {scale.x, scale.y, 1.f}, {offset.x, offset.y, 0.f}, baseTransform);
     }
+
+    glm::mat4 CalculatePerspective(
+        float aspect,
+        float fov,
+        float near,
+        float far)
+    {
+        return glm::perspective(glm::radians(fov), aspect, near, far);
+    }
+
+    glm::mat4 CalculateOrtho(
+        float left,
+        float right,
+        float bottom,
+        float top,
+        float near,
+        float far)
+    {
+        return glm::ortho(left, right, bottom, top, near, far);
+    }
 } // namespace nmGfx

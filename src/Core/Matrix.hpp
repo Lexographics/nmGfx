@@ -56,6 +56,23 @@ namespace nmGfx
         float fov,
         float near,
         float far);
+    
+    /**
+     * @brief 
+     * 
+     * @param top 
+     * @param bottom 
+     * @param left 
+     * @param right 
+     * @return glm::mat4 
+     */
+    glm::mat4 CalculateOrtho(
+        float left,
+        float right,
+        float bottom,
+        float top,
+        float near,
+        float far);
 } // namespace nmGfx
 
 
