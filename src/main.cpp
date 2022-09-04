@@ -12,6 +12,7 @@
 #include "Core/Renderer.hpp"
 #include "Core/GL/Model.hpp"
 #include "Core/GL/Material.hpp"
+#include "Core/Matrix.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -29,27 +30,36 @@ int main(int argc, char const *argv[])
     std::shared_ptr<nmGfx::Texture> tex = std::make_shared<nmGfx::Texture>();
     tex->LoadFromFile("res/viking_room.png");
 
+    std::shared_ptr<nmGfx::Texture> tex2d = std::make_shared<nmGfx::Texture>();
+    tex2d->LoadFromFile("res/planet09.png");
+
     nmGfx::Material mat;
     mat.albedo = {0.2f, 0.7f, 0.1f, 1.f};
     mat.albedo_tex = tex;
-
+    float t = 0.f;
     while(!window.ShouldClose())
     {
         window.PollEvents();
         
-        glm::mat4 projection = glm::perspective(glm::radians(60.f), 16.0f / 9.0f, 0.1f, 500.f);
         glm::mat4 camera = glm::translate(glm::mat4(1.f), {0.f, 0.5f, 2.f});
 
-        glm::mat4 modelTransform = glm::mat4(1.f);
-        modelTransform = glm::rotate(modelTransform, glm::radians(180.f), {0.f, 1.f, 0.f});
-        modelTransform = glm::rotate(modelTransform, glm::radians(-90.f), {1.f, 0.f, 0.f});
-
-        renderer.Begin3D(projection, camera);
-        renderer.DrawModel(model, modelTransform, mat, 12);
+        renderer.Begin3D(nmGfx::CalculatePerspective((float)window.GetVideoWidth() / (float)window.GetVideoHeight(), 60.f, 0.1f, 500.f), camera);
+        renderer.DrawModel(model, nmGfx::CalculateModelMatrix({0.f, 0.f, 0.f}, {90.f, 180.f, 0.f}, {1.f, 1.f, 1.f}), mat, 12);
         // printf("ID: %i\n", renderer.Get3DPickID(window.GetVideoMousePosX(), window.GetVideoHeight() - window.GetVideoMousePosY()));
         renderer.End3D();
 
+        
+        renderer.Begin2D(nmGfx::CalculateModelMatrix({0.f, 0.f, 1.f}, {.0f, .0f, t*10}, {1.f, 1.f, 1.f}));
+        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({-200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), 13);
+        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), 14);
+        renderer.End2D();
+
+        t += 0.01f;
+        // printf("%f\n", t);
+
+        renderer.ClearLayers();
         renderer.Draw3DLayer();
+        renderer.Draw2DLayer();
 
         window.SwapBuffers();
     }

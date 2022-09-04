@@ -72,7 +72,7 @@ namespace nmGfx
             glTexParameteri(GetTextureType(_type), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameteri(GetTextureType(_type), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-            glTexImage2D(GetTextureType(_type), 0, GL_RGB, _width, _height, 0, GetTextureFormat(_channels), GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GetTextureType(_type), 0, GL_RGBA, _width, _height, 0, GetTextureFormat(_channels), GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GetTextureType(_type));
         }
         else
