@@ -182,9 +182,10 @@ namespace nmGfx
         _window.UnbindFramebuffer();
     }
 
-    void Renderer::DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, int drawID /*= 0*/)
+    void Renderer::DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, const glm::vec3& tint /*= glm::vec3(1.f)*/, int drawID /*= 0*/)
     {
         _data2d._shader.UniformMat4("uModel", transform);
+        _data2d._shader.UniformVec3("uTint", tint);
         _data2d._shader.UniformTexture("uTexture", texture ? *(texture) : _whiteTexture, 1);
 
         _data2d._shader.UniformInt("uDrawID", drawID);

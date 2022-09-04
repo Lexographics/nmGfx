@@ -50,8 +50,8 @@ int main(int argc, char const *argv[])
 
         
         renderer.Begin2D(nmGfx::CalculateModelMatrix({0.f, 0.f, 1.f}, {.0f, .0f, t*10}, {1.f, 1.f, 1.f}));
-        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({-200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), 13);
-        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), 14);
+        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({-200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {0.f, 1.f, 1.f}, 13);
+        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {1.f, 0.f, 1.f}, 14);
         renderer.End2D();
 
         t += 0.01f;

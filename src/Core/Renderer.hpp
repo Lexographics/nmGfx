@@ -85,7 +85,7 @@ namespace nmGfx
         void Begin2D(const glm::mat4 cameraTransform);
         void End2D();
 
-        void DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, int drawID = 0);
+        void DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, const glm::vec3& tint = glm::vec3(1.f), int drawID = 0);
 
         /**
          * @brief Draws 2d layer on full screen
