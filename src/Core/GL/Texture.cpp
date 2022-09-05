@@ -8,6 +8,7 @@ namespace nmGfx
     static GLenum GetTextureType(TextureType type)
     {
         return type == TextureType::TEXTURE2D ? GL_TEXTURE_2D
+               : type == TextureType::CUBEMAP ? GL_TEXTURE_CUBE_MAP
                : GL_NONE;
     }
     static GLenum GetTextureFormat(int nrChannels)
@@ -52,12 +53,9 @@ namespace nmGfx
         }
     }
 
-    void Texture::LoadFromFile(const char* path, TextureType type/* = TextureType::TEXTURE2D*/)
+    void Texture::Load2DFromFile(const char* path)
     {
-        _type = type;
-
-        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        _type = TextureType::TEXTURE2D;
 
         unsigned char* data = stbi_load(path, &_width, &_height, &_channels, 0);
         if(data)
@@ -69,7 +67,7 @@ namespace nmGfx
 
             glTexParameteri(GetTextureType(_type), GL_TEXTURE_WRAP_S, GL_REPEAT);	
             glTexParameteri(GetTextureType(_type), GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GetTextureType(_type), GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GetTextureType(_type), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GetTextureType(_type), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             glTexImage2D(GetTextureType(_type), 0, GL_RGBA, _width, _height, 0, GetTextureFormat(_channels), GL_UNSIGNED_BYTE, data);
@@ -80,6 +78,41 @@ namespace nmGfx
             printf("Error: Failed to load texture: %s\n", path);
         }
         stbi_image_free(data);
+    }
+
+    void Texture::LoadCubemapFromFiles(CubemapImagePaths paths)
+    {
+        _type = TextureType::CUBEMAP;
+
+        glGenTextures(1, &_id);
+        glBindTexture(GetTextureType(_type), _id);
+
+        glTexParameteri(GetTextureType(_type), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);	
+        glTexParameteri(GetTextureType(_type), GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GetTextureType(_type), GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GetTextureType(_type), GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GetTextureType(_type), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        for(int i=0; i<6; i++)
+        {
+            unsigned char* data = stbi_load(paths[i].c_str(), &_width, &_height, &_channels, 0);
+            if(data)
+            {
+                glTexImage2D(
+                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                    0, GL_RGB,
+                    _width, _height,
+                    0,
+                    GetTextureFormat(_channels),
+                    GL_UNSIGNED_BYTE,
+                    data);
+                stbi_image_free(data);
+            }
+            else
+            {
+                printf("Error: Failed to load texture: %s\n", paths[i].c_str());
+            }
+        }
     }
 
     void Texture::Use(int slot /*= 0*/)

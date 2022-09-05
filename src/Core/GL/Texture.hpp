@@ -2,21 +2,43 @@
 #define __NM_GFX_TEXTURE_HPP__
 
 #include <stdint.h>
+#include <string>
 
 namespace nmGfx
 {
     enum class TextureType
     {
         TEXTURE2D = 0,
+        CUBEMAP = 1,
     };
 
     class Texture
     {
         public:
+            struct CubemapImagePaths
+            {
+                std::string right;  // positive-x
+                std::string left;   // negative-x
+                std::string top;    // positive-y
+                std::string bottom; // negavive-y
+                std::string front;  // positive-z
+                std::string back;   // negative-z
+
+                std::string operator[](int index)
+                {
+                    std::string* paths[6] = { &right, &left, &top, &bottom, &front, &back };
+                    if(index >= 0 && index < 6)
+                        return *paths[index];
+                    return "";
+                }
+            };
+            
+        public:
             Texture() = default;
             ~Texture();
 
-            void LoadFromFile(const char* path, TextureType type = TextureType::TEXTURE2D);
+            void Load2DFromFile(const char* path);
+            void LoadCubemapFromFiles(CubemapImagePaths paths);
             void Use(int slot = 0);
 
             
