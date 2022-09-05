@@ -23,6 +23,19 @@ namespace nmGfx
         _fullscreenShader.LoadFile("res/fullscreen.glsl");
 
         _data3d._gBuffer.CreateGBuffer(&_window, videoWidth, videoHeight);
+
+        _data3d._skyboxShader.LoadFile("res/skybox.glsl");
+        
+        _data3d._skyboxTexture = std::make_shared<Texture>();
+
+        nmGfx::Texture::CubemapImagePaths paths;
+        paths.right   = "res/skybox/px.png";
+        paths.left    = "res/skybox/nx.png";
+        paths.top     = "res/skybox/py.png";
+        paths.bottom  = "res/skybox/ny.png";
+        paths.front   = "res/skybox/pz.png";
+        paths.back    = "res/skybox/nz.png";
+        _data3d._skyboxTexture->LoadCubemapFromFiles(paths);
         
         unsigned char pixel[3] = { 255, 255, 255 };
         _whiteTexture.LoadFromData(pixel, 1, 1, 3);
@@ -78,6 +91,50 @@ namespace nmGfx
             _data2d._model2d.SetAttribute(1, AttributeType::VEC2);
             _data2d._model2d.UploadAttributes();
         }
+
+        { // skybox cube
+            static const float skybox_vertices[] = {
+                /*       aPos       */  
+                -1.0f,  -1.0f,   1.0f,
+                 1.0f,  -1.0f,   1.0f,
+                 1.0f,  -1.0f,  -1.0f,
+                -1.0f,  -1.0f,  -1.0f,
+                -1.0f,   1.0f,   1.0f,
+                 1.0f,   1.0f,   1.0f,
+                 1.0f,   1.0f,  -1.0f,
+                -1.0f,   1.0f,  -1.0f,
+            };  
+            static const unsigned int skybox_indices[] = {
+                1, 2, 6,
+                6, 5, 1,
+
+                0, 4, 7,
+                7, 3, 0,
+
+                4, 5, 6,
+                6, 7, 4,
+
+                0, 3, 2,
+                2, 1, 0,
+
+                0, 1, 5,
+                5, 4, 0,
+
+                3, 7, 6,
+                6, 2, 3,
+            };
+
+            _data3d._skyboxModel.Create();
+            _data3d._skyboxModel.ResetAttributes();
+            std::vector<float> data(sizeof(skybox_vertices) / sizeof(float));
+            std::vector<uint32_t> indices_vec(sizeof(skybox_indices) / sizeof(uint32_t));
+            memcpy(data.data(), skybox_vertices, sizeof(skybox_vertices));
+            memcpy(indices_vec.data(), skybox_indices, sizeof(skybox_indices));
+            _data3d._skyboxModel.SetModelData(data);
+            _data3d._skyboxModel.SetIndexData(indices_vec);
+            _data3d._skyboxModel.SetAttribute(0, AttributeType::VEC3);
+            _data3d._skyboxModel.UploadAttributes();
+        }
     }
 
     Renderer::~Renderer()
@@ -96,16 +153,26 @@ namespace nmGfx
 
     void Renderer::Begin3D(const glm::mat4 projectionMatrix, const glm::mat4 cameraTransform)
     {
+        _data3d._projectionMatrix = projectionMatrix;
+        _data3d._viewMatrix = glm::inverse(cameraTransform);
+
         _data3d._gBuffer.Use();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glEnable(GL_DEPTH_TEST);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // Draw skybox
+        glDepthFunc(GL_LEQUAL);
+        _data3d._skyboxShader.Use();
+        _data3d._skyboxShader.UniformTexture("uSkybox", *_data3d._skyboxTexture, 0);
+
+        glm::mat4 view = glm::mat4(glm::mat3(_data3d._viewMatrix));
+        _data3d._skyboxShader.UniformMat4("uViewProj", _data3d._projectionMatrix * view);
+        _data3d._skyboxModel.Draw();
+        glDepthFunc(GL_LESS);
+
+
         _data3d._shader.Use();
-
-        _data3d._projectionMatrix = projectionMatrix;
-        _data3d._viewMatrix = glm::inverse(cameraTransform);
-
         glm::mat4 view_proj = _data3d._projectionMatrix * _data3d._viewMatrix;
         _data3d._shader.UniformMat4("uViewProjection", view_proj);
     }
@@ -138,8 +205,8 @@ namespace nmGfx
         // Material (conditions in textures are for one lining  'if texture is null, bind white texture')
         _data3d._shader.UniformVec4("uMat_Albedo", material.albedo);
         _data3d._shader.UniformTexture("uMat_AlbedoTex", material.albedo_tex ? *(material.albedo_tex) : _whiteTexture, 0);
-        _data3d._shader.UniformFloat("uMat_Specular", material.specular);
-        _data3d._shader.UniformTexture("uMat_SpecularTex", material.specular_tex ? *(material.specular_tex) : _whiteTexture, 1);
+        // _data3d._shader.UniformFloat("uMat_Specular", material.specular);
+        // _data3d._shader.UniformTexture("uMat_SpecularTex", material.specular_tex ? *(material.specular_tex) : _whiteTexture, 1);
 
         _data3d._shader.UniformInt("uDrawID", drawID);
         model.Draw();
@@ -149,11 +216,9 @@ namespace nmGfx
     {
         glm::mat4 fullproj = glm::ortho(0.f, (float)_window.GetWindowWidth(), 0.f, (float)_window.GetWindowHeight(), 0.f, 10.f); // no view matrix
         _fullscreenShader.Use();
-        _fullscreenShader.UniformMat4("uModel", glm::mat4(1.f));
-        _fullscreenShader.UniformMat4("uViewProjection", fullproj);
         _fullscreenShader.UniformTexture("gAlbedo", _data3d._gBuffer._gAlbedo, 0);
-        _fullscreenShader.UniformTexture("gPosition", _data3d._gBuffer._gPosition, 1);
-        _fullscreenShader.UniformTexture("gNormal", _data3d._gBuffer._gNormal, 2);
+        // _fullscreenShader.UniformTexture("gPosition", _data3d._gBuffer._gPosition, 1);
+        // _fullscreenShader.UniformTexture("gNormal", _data3d._gBuffer._gNormal, 2);
         
         _fullscreenModel.Draw();
     }
@@ -213,8 +278,6 @@ namespace nmGfx
     {
         glm::mat4 fullproj = glm::ortho(0.f, (float)_window.GetWindowWidth(), 0.f, (float)_window.GetWindowHeight(), 0.f, 10.f); // no view matrix
         _fullscreenShader.Use();
-        _fullscreenShader.UniformMat4("uModel", glm::mat4(1.f));
-        _fullscreenShader.UniformMat4("uViewProjection", fullproj);
         _fullscreenShader.UniformTexture("gAlbedo", _data2d._frameBuffer._gAlbedo, 0);
         
         _fullscreenModel.Draw();

@@ -15,12 +15,6 @@
 
 namespace nmGfx
 {
-
-    enum class Backend
-    {
-        OPENGL = 0,
-    };
-    
     // pure virtual base class that has renderer methods
     class Renderer
     {
@@ -127,6 +121,10 @@ namespace nmGfx
             glm::mat4 _viewMatrix;
 
             Shader _shader;
+
+            Model _skyboxModel;
+            Shader _skyboxShader;
+            std::shared_ptr<Texture> _skyboxTexture;
         } _data3d;
 
         struct {
