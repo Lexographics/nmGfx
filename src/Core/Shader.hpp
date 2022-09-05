@@ -29,6 +29,8 @@ namespace nmGfx
         Shader();
         ~Shader();
     private:
+        std::string _shaderName{""};
+
         std::string _vertexSource{""};
         std::string _fragmentSource{""};
 

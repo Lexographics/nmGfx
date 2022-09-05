@@ -19,6 +19,7 @@ namespace nmGfx
         std::stringstream strstream;
         strstream << ifstream.rdbuf();
 
+        _shaderName = file;
         LoadText(strstream.str());
     }
 
@@ -100,6 +101,8 @@ namespace nmGfx
 
         glDeleteShader(_vertexShaderID);
         glDeleteShader(_fragmentShaderID);
+
+        printf("Loaded shader with id: %i, path: %s\n", _programID, _shaderName.c_str());
     }
 
     void Shader::Use()
@@ -117,48 +120,90 @@ namespace nmGfx
 
 
 
-    // Uniforms
+    // Uniforms (TEMPORARY SOLUTION) // todo add location caching
     void Shader::UniformFloat(const std::string& name, float value)
     {
         Use();
-        glUniform1f(glGetUniformLocation(_programID, name.c_str()), value);
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+            return;
+        }
+        glUniform1f(loc, value);
     }
 
     void Shader::UniformVec3(const std::string& name, glm::vec3 value)
     {
         Use();
-        glUniform3f(glGetUniformLocation(_programID, name.c_str()), value.x, value.y, value.z);
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+            return;
+        }
+        glUniform3f(loc, value.x, value.y, value.z);
     }
     void Shader::UniformVec4(const std::string& name, glm::vec4 value)
     {
         Use();
-        glUniform4f(glGetUniformLocation(_programID, name.c_str()), value.x, value.y, value.z, value.w);
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+            return;
+        }
+        glUniform4f(loc, value.x, value.y, value.z, value.w);
     }
 
     void Shader::UniformMat4(const std::string& name, glm::mat4 value)
     {
         Use();
-        glUniformMatrix4fv(glGetUniformLocation(_programID, name.c_str()), 1, GL_FALSE, &value[0][0]);
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+            return;
+        }
+        glUniformMatrix4fv(loc, 1, GL_FALSE, &value[0][0]);
     }
 
     void Shader::UniformInt(const std::string& name, int value)
     {
         Use();
-        glUniform1i(glGetUniformLocation(_programID, name.c_str()), value);
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+            return;
+        }
+        glUniform1i(loc, value);
     }
 
     void Shader::UniformTexture(const std::string& name, Texture& texture, int slot)
     {
         Use();
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+            return;
+        }
         texture.Use(slot);
-        glUniform1i(glGetUniformLocation(_programID, name.c_str()), slot);
+        glUniform1i(loc, slot);
     }
 
     void Shader::UniformTexture(const std::string& name, unsigned int textureID, int slot)
     {
         Use();
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+            return;
+        }
         glActiveTexture(GL_TEXTURE0+slot);
         glBindTexture(GL_TEXTURE_2D, textureID);
-        glUniform1i(glGetUniformLocation(_programID, name.c_str()), slot);
+        glUniform1i(loc, slot);
     }
 } // namespace nmGfx
