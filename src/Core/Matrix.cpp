@@ -11,29 +11,12 @@ namespace nmGfx
         const glm::vec3& offset /*= glm::vec3(0.f, 0.f, 0.f)*/,
         const glm::mat4& baseTransform /*= glm::mat4(1.f)*/)
     {
-        glm::mat4 transform = baseTransform;
-        
-        /*
-        transform = glm::translate(transform, offset);
-        transform = glm::translate(transform, translation);
-        
-        transform = glm::scale(transform, scale);
-
-        transform = glm::rotate(transform, glm::radians(rotation.y), {0.f, 1.f, 0.f});
-        transform = glm::rotate(transform, glm::radians(rotation.x), {1.f, 0.f, 0.f});
-        transform = glm::rotate(transform, glm::radians(rotation.z), {0.f, 0.f, 1.f});
-        */
-
-        transform = glm::translate(transform, offset);
-        
-        transform = glm::scale(glm::mat4(1.f), scale) * transform;
-
-        transform = glm::rotate(glm::mat4(1.f), glm::radians(rotation.z), {0.f, 0.f, 1.f}) * transform;
-        transform = glm::rotate(glm::mat4(1.f), glm::radians(rotation.y), {0.f, 1.f, 0.f}) * transform;
-        transform = glm::rotate(glm::mat4(1.f), glm::radians(rotation.x), {1.f, 0.f, 0.f}) * transform;
-        
-        transform = glm::translate(glm::mat4(1.f), translation) * transform;
-
+        glm::mat4 transform = glm::translate(baseTransform, translation)
+            * glm::rotate(glm::mat4(1.f), glm::radians(rotation.y), {0.f, 1.f, 0.f})
+            * glm::rotate(glm::mat4(1.f), glm::radians(rotation.x), {1.f, 0.f, 0.f})
+            * glm::rotate(glm::mat4(1.f), glm::radians(rotation.z), {0.f, 0.f, 1.f})
+            * glm::scale(glm::mat4(1.f), {scale.x, scale.y, scale.z});
+  
         return transform;
     }
     
