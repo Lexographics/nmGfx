@@ -8,15 +8,15 @@ find_package(glfw3 REQUIRED)
 
 # nmGfx
 file(GLOB_RECURSE NMGFX_SOURCES
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 set(NMGFX_SOURCES
     ${NMGFX_SOURCES}
-    ${CMAKE_SOURCE_DIR}/thirdparty/glad.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/glad.c
 )
 
 add_library(nmGfx ${NMGFX_SOURCES})
-target_include_directories(nmGfx PUBLIC ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(nmGfx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(nmGfx PUBLIC glfw)
 target_link_libraries(nmGfx PRIVATE -static-libstdc++ -static-libgcc)
 
