@@ -51,7 +51,30 @@ namespace nmGfx
 
         glfwSwapInterval(1);
 
-        // glfwSetInputMode(_pWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        if(flags & WindowFlags::FULLSCREEN)
+        {
+            SetFullscreen(true);
+        }
+    }
+
+    void Window::SetFullscreen(bool fullscreen)
+    {
+        if(fullscreen)
+        {
+            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+            glfwGetWindowPos(_pWindow, &_fullscreen_oldX, &_fullscreen_oldY);
+            glfwGetWindowSize(_pWindow, &_fullscreen_oldW, &_fullscreen_oldH);
+            const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+
+            _fullscreen_oldRefresh = mode->refreshRate;
+            glfwSetWindowMonitor(_pWindow, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+            _fullscreen = true;
+        }
+        else
+        {
+            glfwSetWindowMonitor(_pWindow, nullptr, _fullscreen_oldX, _fullscreen_oldY, _fullscreen_oldW, _fullscreen_oldH, _fullscreen_oldRefresh);
+            _fullscreen = false;
+        }
     }
 
     bool Window::ShouldClose()

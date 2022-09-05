@@ -7,14 +7,10 @@
 class GLFWwindow;
 namespace nmGfx
 {
-    enum WindowFlags
+    enum WindowFlags : uint32_t
     {
         NONE = 0,
-    };
-    enum ClearBit
-    {
-        COLOR = 1 << 0,
-        DEPTH = 1 << 1,
+        FULLSCREEN = 1 << 1,
     };
 
     // pure virtual base class that has window methods
@@ -33,6 +29,9 @@ namespace nmGfx
         ~Window() = default;
         Window(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags);
         Window() = default;
+
+        void SetFullscreen(bool fullscreen);
+        inline bool GetFullscreen() { return _fullscreen; }
 
         // Returns x mouse pos relative to window
         int GetWindowMousePosX();
@@ -60,6 +59,14 @@ namespace nmGfx
 
         int _videoWidth;
         int _videoHeight;
+
+        // Stores window values after setting fullscreen to revert on returning back to windowed mode
+        bool _fullscreen = false;
+        int _fullscreen_oldX = 0;
+        int _fullscreen_oldY = 0;
+        int _fullscreen_oldW = 0;
+        int _fullscreen_oldH = 0;
+        int _fullscreen_oldRefresh = 0;
     };
     
 } // namespace nmGfx
