@@ -47,10 +47,10 @@ nmGfx is a CMake project and building it is like any normal CMake project.
 - [glfw](https://www.glfw.org/)
 
 Running the following commands will generate:
-- ```build/Playground``` executable for showcasing renderer capabilities
+- ```build/Playground``` executable for showcasing renderer capabilities if ```NMGFX_BUILD_PLAYGROUND``` is True
 - ```build/libnmGfx.a``` static library that has all renderer source files
 ```
 mkdir build
-cmake -S . -B build/ -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build/ -DCMAKE_BUILD_TYPE=Release -DNMGFX_BUILD_PLAYGROUND=True
 cmake --build build/
 ```
