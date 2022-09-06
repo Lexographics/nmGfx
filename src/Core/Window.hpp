@@ -52,6 +52,8 @@ namespace nmGfx
 
         void UnbindFramebuffer();
 
+        
+        inline GLFWwindow* GetGLFWwindow() { return _pWindow; }
     private:
         friend class Renderer;
         
