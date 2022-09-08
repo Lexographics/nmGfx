@@ -97,7 +97,7 @@ namespace nmGfx
          */
         int Get2DPickIDSafe(int x, int y);
 
-        void DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, const glm::vec3& tint = glm::vec3(1.f), int drawID = 0);
+        void DrawTexture(Texture* texture, const glm::mat4& transform, const glm::vec3& tint = glm::vec3(1.f), int drawID = 0);
 
         /**
          * @brief Draws 2d layer on full screen
@@ -105,16 +105,9 @@ namespace nmGfx
          */
         void Draw2DLayer();
 
-    private:
-        Window _window{};
 
-        Texture _whiteTexture;
-
-        Model _fullscreenModel;
-        Shader _fullscreenShader;
-
-
-        struct {
+        struct Data3D
+        {
             Framebuffer _gBuffer;
 
             glm::mat4 _projectionMatrix;
@@ -124,10 +117,10 @@ namespace nmGfx
 
             Model _skyboxModel;
             Shader _skyboxShader;
-            std::shared_ptr<Texture> _skyboxTexture;
-        } _data3d;
-
-        struct {
+            Texture* _skyboxTexture{nullptr};
+        };
+        struct Data2D
+        {
             Model _model2d;
             Framebuffer _frameBuffer;
 
@@ -135,7 +128,25 @@ namespace nmGfx
             glm::mat4 _viewMatrix;
 
             Shader _shader;
-        } _data2d;
+        };
+        struct DataFullscreen
+        {
+            Model _model;
+            Shader _shader;
+        };
+
+        DataFullscreen& GetDataFullscreen() { return _fullscreen; }
+        Data3D& GetData3D() { return _data3d; }
+        Data2D& GetData2D() { return _data2d; }
+    private:
+        Window _window{};
+
+        Texture _whiteTexture;
+
+        DataFullscreen _fullscreen;
+
+        Data3D _data3d;
+        Data2D _data2d;
     };
     
 } // namespace nmGfx

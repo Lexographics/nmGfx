@@ -15,27 +15,8 @@ namespace nmGfx
     {
         _window = nmGfx::Window(windowWidth, windowHeight, videoWidth, videoHeight, title, flags);
 
-
-        _data2d._shader.LoadFile("res/default2d.glsl");
         _data2d._frameBuffer.Create2DDefault(&_window, videoWidth, videoHeight);
-
-        _data3d._shader.LoadFile("res/default.glsl");
-        _fullscreenShader.LoadFile("res/fullscreen.glsl");
-
         _data3d._gBuffer.CreateGBuffer(&_window, videoWidth, videoHeight);
-
-        _data3d._skyboxShader.LoadFile("res/skybox.glsl");
-        
-        _data3d._skyboxTexture = std::make_shared<Texture>();
-
-        nmGfx::Texture::CubemapImagePaths paths;
-        paths.right   = "res/skybox/px.png";
-        paths.left    = "res/skybox/nx.png";
-        paths.top     = "res/skybox/py.png";
-        paths.bottom  = "res/skybox/ny.png";
-        paths.front   = "res/skybox/pz.png";
-        paths.back    = "res/skybox/nz.png";
-        _data3d._skyboxTexture->LoadCubemapFromFiles(paths);
         
         unsigned char pixel[3] = { 255, 255, 255 };
         _whiteTexture.LoadFromData(pixel, 1, 1, 3);
@@ -53,17 +34,17 @@ namespace nmGfx
                 0, 2, 3
             };
 
-            _fullscreenModel.Create();
-            _fullscreenModel.ResetAttributes();
+            _fullscreen._model.Create();
+            _fullscreen._model.ResetAttributes();
             std::vector<float> data(sizeof(fullscreen_vertices) / sizeof(float));
             std::vector<uint32_t> indices_vec(sizeof(fullscreen_indices) / sizeof(uint32_t));
             memcpy(data.data(), fullscreen_vertices, sizeof(fullscreen_vertices));
             memcpy(indices_vec.data(), fullscreen_indices, sizeof(fullscreen_indices));
-            _fullscreenModel.SetModelData(data);
-            _fullscreenModel.SetIndexData(indices_vec);
-            _fullscreenModel.SetAttribute(0, AttributeType::VEC2);
-            _fullscreenModel.SetAttribute(1, AttributeType::VEC2);
-            _fullscreenModel.UploadAttributes();
+            _fullscreen._model.SetModelData(data);
+            _fullscreen._model.SetIndexData(indices_vec);
+            _fullscreen._model.SetAttribute(0, AttributeType::VEC2);
+            _fullscreen._model.SetAttribute(1, AttributeType::VEC2);
+            _fullscreen._model.UploadAttributes();
         }
 
         { // 2d model quad
@@ -161,15 +142,18 @@ namespace nmGfx
         glEnable(GL_DEPTH_TEST);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Draw skybox
-        glDepthFunc(GL_LEQUAL);
-        _data3d._skyboxShader.Use();
-        _data3d._skyboxShader.UniformTexture("uSkybox", *_data3d._skyboxTexture, 0);
+        if(_data3d._skyboxTexture != nullptr)
+        {
+            // Draw skybox
+            glDepthFunc(GL_LEQUAL);
+            _data3d._skyboxShader.Use();
+            _data3d._skyboxShader.UniformTexture("uSkybox", *_data3d._skyboxTexture, 0);
 
-        glm::mat4 view = glm::mat4(glm::mat3(_data3d._viewMatrix));
-        _data3d._skyboxShader.UniformMat4("uViewProj", _data3d._projectionMatrix * view);
-        _data3d._skyboxModel.Draw();
-        glDepthFunc(GL_LESS);
+            glm::mat4 view = glm::mat4(glm::mat3(_data3d._viewMatrix));
+            _data3d._skyboxShader.UniformMat4("uViewProj", _data3d._projectionMatrix * view);
+            _data3d._skyboxModel.Draw();
+            glDepthFunc(GL_LESS);
+        }
 
 
         _data3d._shader.Use();
@@ -215,12 +199,12 @@ namespace nmGfx
     void Renderer::Draw3DLayer()
     {
         glm::mat4 fullproj = glm::ortho(0.f, (float)_window.GetWindowWidth(), 0.f, (float)_window.GetWindowHeight(), 0.f, 10.f); // no view matrix
-        _fullscreenShader.Use();
-        _fullscreenShader.UniformTexture("gAlbedo", _data3d._gBuffer._gAlbedo, 0);
-        // _fullscreenShader.UniformTexture("gPosition", _data3d._gBuffer._gPosition, 1);
-        // _fullscreenShader.UniformTexture("gNormal", _data3d._gBuffer._gNormal, 2);
+        _fullscreen._shader.Use();
+        _fullscreen._shader.UniformTexture("gAlbedo", _data3d._gBuffer._gAlbedo, 0);
+        // _fullscreen._shader.UniformTexture("gPosition", _data3d._gBuffer._gPosition, 1);
+        // _fullscreen._shader.UniformTexture("gNormal", _data3d._gBuffer._gNormal, 2);
         
-        _fullscreenModel.Draw();
+        _fullscreen._model.Draw();
     }
 
 
@@ -264,7 +248,7 @@ namespace nmGfx
         return id;
     }
 
-    void Renderer::DrawTexture(std::shared_ptr<Texture> texture, const glm::mat4& transform, const glm::vec3& tint /*= glm::vec3(1.f)*/, int drawID /*= 0*/)
+    void Renderer::DrawTexture(Texture* texture, const glm::mat4& transform, const glm::vec3& tint /*= glm::vec3(1.f)*/, int drawID /*= 0*/)
     {
         _data2d._shader.UniformMat4("uModel", transform);
         _data2d._shader.UniformVec3("uTint", tint);
@@ -277,9 +261,9 @@ namespace nmGfx
     void Renderer::Draw2DLayer()
     {
         glm::mat4 fullproj = glm::ortho(0.f, (float)_window.GetWindowWidth(), 0.f, (float)_window.GetWindowHeight(), 0.f, 10.f); // no view matrix
-        _fullscreenShader.Use();
-        _fullscreenShader.UniformTexture("gAlbedo", _data2d._frameBuffer._gAlbedo, 0);
+        _fullscreen._shader.Use();
+        _fullscreen._shader.UniformTexture("gAlbedo", _data2d._frameBuffer._gAlbedo, 0);
         
-        _fullscreenModel.Draw();
+        _fullscreen._model.Draw();
     }
 } // namespace nmGfx

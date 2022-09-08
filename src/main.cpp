@@ -25,15 +25,20 @@ int main(int argc, char const *argv[])
 
     nmGfx::Window& window = renderer.GetWindow();
     // window.SetClearColor(0.3f, 0.4f, 0.5f);
+
+    renderer.GetData2D()._shader.LoadFile("res/default2d.glsl");
+    renderer.GetData3D()._shader.LoadFile("res/default.glsl");
+    renderer.GetData3D()._skyboxShader.LoadFile("res/skybox.glsl");
+    renderer.GetDataFullscreen()._shader.LoadFile("res/fullscreen.glsl");
     
     nmGfx::Model model;
     model.LoadFromFile("res/viking_room.obj");
 
     std::shared_ptr<nmGfx::Texture> tex = std::make_shared<nmGfx::Texture>();
-    tex->LoadFromFile("res/viking_room.png");
+    tex->Load2DFromFile("res/viking_room.png");
 
     std::shared_ptr<nmGfx::Texture> tex2d = std::make_shared<nmGfx::Texture>();
-    tex2d->LoadFromFile("res/planet09.png");
+    tex2d->Load2DFromFile("res/planet09.png");
 
     nmGfx::Material mat;
     mat.albedo = {0.2f, 0.7f, 0.1f, 1.f};
@@ -52,8 +57,8 @@ int main(int argc, char const *argv[])
 
         
         renderer.Begin2D(nmGfx::CalculateModelMatrix({0.f, 0.f, 1.f}, {.0f, .0f, t*10}, {1.f, 1.f, 1.f}));
-        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({-200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {0.f, 1.f, 1.f}, 13);
-        renderer.DrawTexture(tex2d, nmGfx::CalculateModelMatrix({200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {1.f, 0.f, 1.f}, 14);
+        renderer.DrawTexture(tex2d.get(), nmGfx::CalculateModelMatrix({-200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {0.f, 1.f, 1.f}, 13);
+        renderer.DrawTexture(tex2d.get(), nmGfx::CalculateModelMatrix({200.f, 0.f}, 0, {tex2d->GetWidth() * 0.3f, tex2d->GetHeight() * 0.3f}), {1.f, 0.f, 1.f}, 14);
 
         // printf("2D ID: %i\n", renderer.Get2DPickID(window.GetVideoMousePosX(), window.GetVideoHeight() - window.GetVideoMousePosY()));
         renderer.End2D();
