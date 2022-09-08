@@ -37,6 +37,8 @@ namespace nmGfx
 
             void Use();
 
+            inline unsigned int GetAlbedoID() { return _gAlbedo; }
+
         private:
             unsigned int _id = 0;
 

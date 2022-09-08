@@ -38,6 +38,7 @@ namespace nmGfx
             ~Texture();
 
             void Load2DFromFile(const char* path);
+            bool Load2DFromMemory(unsigned char* data, size_t size);
             void LoadCubemapFromFiles(CubemapImagePaths paths);
             void Use(int slot = 0);
 
