@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
         nmGfx::WindowFlags::NONE);
 
     nmGfx::Window& window = renderer.GetWindow();
-    // window.SetClearColor(0.3f, 0.4f, 0.5f);
+
 
     renderer.GetData2D()._shader.LoadFile("res/default2d.glsl");
     renderer.GetData3D()._shader.LoadFile("res/default.glsl");
@@ -47,7 +47,13 @@ int main(int argc, char const *argv[])
     while(!window.ShouldClose())
     {
         window.PollEvents();
-        
+        if(window.IsKeyPressed(nmGfx::Window::Key::K))
+            std::cout << "Key 'K' is pressed" << std::endl;
+        if(!window.IsWindowHovered())
+            std::cout << "Cursor is out of window" << std::endl;
+        if(window.IsMouseButtonPressed(nmGfx::Window::MouseButton::LEFT))
+            std::cout << "'Mouse Button Left' is pressed" << std::endl;
+
         glm::mat4 camera = glm::translate(glm::mat4(1.f), {0.f, 0.5f, 2.f});
 
         renderer.Begin3D(nmGfx::CalculatePerspective((float)window.GetVideoWidth() / (float)window.GetVideoHeight(), 60.f, 0.1f, 500.f), camera);

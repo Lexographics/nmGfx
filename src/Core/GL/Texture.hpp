@@ -49,6 +49,8 @@ namespace nmGfx
             inline int GetChannels()  { return _channels; }
             // Loads from raw pixel data
             void LoadFromData(unsigned char* data, int width, int height, int channels, TextureType type = TextureType::TEXTURE2D);
+
+            unsigned int ID() { return _id; }
         private:
             int _width = 0;
             int _height = 0;

@@ -4,23 +4,34 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
+namespace nmGfx
+{
+    // Mouse Button
+    static int MouseButton_ToGLFW(Window::MouseButton button);
+    static Window::MouseButton MouseButton_ToEnum(int button);
+
+    // Mouse Press State
+    static int MousePressState_ToGLFW(Window::MousePressState state);
+    static Window::MousePressState MousePressState_ToEnum(int state);
+
+    // Modifier Keys
+    static int ModifierKeys_ToGLFW(Window::ModifierKeys mods);
+    static Window::ModifierKeys ModifierKeys_ToEnum(int mods);
+
+    // Cursor Mode
+    static int CursorMode_ToGLFW(Window::CursorMode mode);
+    static Window::CursorMode CursorMode_ToEnum(int mode);
+
+    // Key
+    static int Key_ToGLFW(Window::Key key);
+    static Window::Key Key_ToEnum(int key);
+};
+
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if(action == GLFW_PRESS)
-        printf("Pressed: %c\n", key);
-    
-    if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-        exit(0);
-    
-    if(key == GLFW_KEY_E && action == GLFW_PRESS)
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    if(key == GLFW_KEY_E && action == GLFW_RELEASE)
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
+
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -46,8 +57,9 @@ namespace nmGfx
         glfwMakeContextCurrent(_pWindow);
         gladLoadGL();
         
-        glfwSetKeyCallback(_pWindow, key_callback);
-        glfwSetFramebufferSizeCallback(_pWindow, framebuffer_size_callback);  
+        // glfwSetKeyCallback(_pWindow, key_callback);
+        // glfwSetMouseButtonCallback(_pWindow, mouse_button_callback);
+        // glfwSetFramebufferSizeCallback(_pWindow, framebuffer_size_callback);
 
         glfwSwapInterval(1);
 
@@ -145,6 +157,28 @@ namespace nmGfx
     }
 
 
+    /* Input */
+    bool Window::IsMouseButtonPressed(MouseButton button)
+    {
+        return glfwGetMouseButton(_pWindow, MouseButton_ToGLFW(button)) == GLFW_PRESS;
+    }
+
+    void Window::SetCursorMode(CursorMode mode)
+    {
+        glfwSetInputMode(_pWindow, GLFW_CURSOR, CursorMode_ToGLFW(mode));
+    }
+
+    bool Window::IsWindowHovered()
+    {
+        return glfwGetWindowAttrib(_pWindow, GLFW_HOVERED);
+    }
+
+    bool Window::IsKeyPressed(Key key)
+    {
+        return glfwGetKey(_pWindow, Key_ToGLFW(key));
+    }
+
+
 
     // void Window::SetClearColor(float r, float g, float b, float a /*= 1.0f*/)
     // {
@@ -161,4 +195,93 @@ namespace nmGfx
     //     
     //     glClear(flags);
     // };
+
+    // convert enum to GLFW
+    int MouseButton_ToGLFW(Window::MouseButton button)
+    {
+        return button == Window::MouseButton::LEFT ? GLFW_MOUSE_BUTTON_LEFT
+            : button == Window::MouseButton::MIDDLE ? GLFW_MOUSE_BUTTON_MIDDLE
+            : button == Window::MouseButton::RIGHT ? GLFW_MOUSE_BUTTON_RIGHT
+            : GLFW_MOUSE_BUTTON_LEFT;
+    }
+    Window::MouseButton MouseButton_ToEnum(int button)
+    {
+        return button == GLFW_MOUSE_BUTTON_LEFT ? Window::MouseButton::LEFT
+            : button == GLFW_MOUSE_BUTTON_MIDDLE ? Window::MouseButton::MIDDLE
+            : button == GLFW_MOUSE_BUTTON_RIGHT ? Window::MouseButton::RIGHT
+            : Window::MouseButton::LEFT;
+    }
+
+    int MousePressState_ToGLFW(Window::MousePressState state)
+    {
+        return state == Window::MousePressState::CLICKED ? GLFW_PRESS
+            : state == Window::MousePressState::RELEASED ? GLFW_RELEASE
+            : GLFW_RELEASE;
+    }
+    Window::MousePressState MousePressState_ToEnum(int state)
+    {
+        return state == GLFW_PRESS ? Window::MousePressState::CLICKED
+            : state == GLFW_RELEASE ? Window::MousePressState::RELEASED
+            : Window::MousePressState::RELEASED;
+    }
+
+    int ModifierKeys_ToGLFW(Window::ModifierKeys mods)
+    {
+        int value = 0;
+        if(mods & Window::ModifierKeys::MOD_CONTROL)
+            value |= GLFW_MOD_CONTROL;
+        if(mods & Window::ModifierKeys::MOD_SHIFT)
+            value |= GLFW_MOD_SHIFT;
+        if(mods & Window::ModifierKeys::MOD_ALT)
+            value |= GLFW_MOD_ALT;
+        if(mods & Window::ModifierKeys::MOD_SUPER)
+            value |= GLFW_MOD_SUPER;
+        if(mods & Window::ModifierKeys::MOD_CAPS_LOCK)
+            value |= GLFW_MOD_CAPS_LOCK;
+        if(mods & Window::ModifierKeys::MOD_NUM_LOCK)
+            value |= GLFW_MOD_NUM_LOCK;
+        return value;
+    }
+    Window::ModifierKeys ModifierKeys_ToEnum(int mods)
+    {
+        int value = 0;
+        if(mods & GLFW_MOD_CONTROL)
+            value |= Window::ModifierKeys::MOD_CONTROL;
+        if(mods & GLFW_MOD_SHIFT)
+            value |= Window::ModifierKeys::MOD_SHIFT;
+        if(mods & GLFW_MOD_ALT)
+            value |= Window::ModifierKeys::MOD_ALT;
+        if(mods & GLFW_MOD_SUPER)
+            value |= Window::ModifierKeys::MOD_SUPER;
+        if(mods & GLFW_MOD_CAPS_LOCK)
+            value |= Window::ModifierKeys::MOD_CAPS_LOCK;
+        if(mods & GLFW_MOD_NUM_LOCK)
+            value |= Window::ModifierKeys::MOD_NUM_LOCK;
+        return (Window::ModifierKeys)value;
+    }
+
+    int CursorMode_ToGLFW(Window::CursorMode mode)
+    {
+        return mode == Window::CursorMode::NORMAL ? GLFW_CURSOR_NORMAL
+            : mode == Window::CursorMode::HIDDEN ? GLFW_CURSOR_HIDDEN
+            : mode == Window::CursorMode::DISABLED ? GLFW_CURSOR_DISABLED
+            : GLFW_CURSOR_NORMAL;
+    }
+    Window::CursorMode CursorMode_ToEnum(int mode)
+    {
+        return mode == GLFW_CURSOR_NORMAL ? Window::CursorMode::NORMAL
+            : mode == GLFW_CURSOR_HIDDEN ? Window::CursorMode::HIDDEN
+            : mode == GLFW_CURSOR_DISABLED ? Window::CursorMode::DISABLED
+            : Window::CursorMode::NORMAL;
+    }
+
+    int Key_ToGLFW(Window::Key key)
+    {
+        return (int)key;
+    }
+    Window::Key Key_ToEnum(int key)
+    {
+        return Window::Key(key);
+    }
+
 } // namespace nmGfx

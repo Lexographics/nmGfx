@@ -25,6 +25,7 @@ target_link_libraries(nmGfx PRIVATE -static-libstdc++ -static-libgcc)
 if(NMGFX_BUILD_PLAYGROUND)
     add_executable(Playground src/main.cpp)
     target_link_libraries(Playground nmGfx)
+    target_compile_definitions(Playground PUBLIC NMGFX_BUILD_PLAYGROUND)
 endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
