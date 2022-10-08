@@ -6,7 +6,7 @@
 
 #include <glm/glm.hpp>
 
-#include "Core/Window.hpp"
+#include "Window.hpp"
 #include "Core/GL/Model.hpp"
 #include "Core/Shader.hpp"
 #include "Core/GL/Texture.hpp"
