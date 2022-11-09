@@ -74,157 +74,155 @@ namespace nmGfx
             HIDDEN,
             DISABLED,
         };
-        enum ModifierKeys : unsigned int
-        {
-            NONE  = 0,
-            MOD_CONTROL   = 1 << 1,
-            MOD_SHIFT     = 2 << 1,
-            MOD_ALT       = 3 << 1,
-            MOD_SUPER     = 4 << 1,
-            MOD_CAPS_LOCK = 5 << 1,
-            MOD_NUM_LOCK  = 6 << 1,
-        };
-        // maps one-to-one to glfw keys
-        enum Key : int
-        {
-            // glfw3.h
-            UNKNOWN = -1,
+		enum ModifierKeys : unsigned int {
+			ModifierKeys_NONE = 0,
+			ModifierKeys_MOD_CONTROL = 1 << 1,
+			ModifierKeys_MOD_SHIFT = 2 << 1,
+			ModifierKeys_MOD_ALT = 3 << 1,
+			ModifierKeys_MOD_SUPER = 4 << 1,
+			ModifierKeys_MOD_CAPS_LOCK = 5 << 1,
+			ModifierKeys_MOD_NUM_LOCK = 6 << 1,
+		};
+		// maps one-to-one to glfw keys
+		enum class Key : int {
+			// glfw3.h
+			Key_UNKNOWN = -1,
 
-            SPACE             =  32,
-            APOSTROPHE        =  39,  /* ' */
-            COMMA             =  44,  /* , */
-            MINUS             =  45,  /* - */
-            PERIOD            =  46,  /* . */
-            SLASH             =  47,  /* / */
-            _0                =  48,
-            _1                =  49,
-            _2                =  50,
-            _3                =  51,
-            _4                =  52,
-            _5                =  53,
-            _6                =  54,
-            _7                =  55,
-            _8                =  56,
-            _9                =  57,
-            SEMICOLON         =  59,  /* ; */
-            EQUAL             =  61,  /* = */
-            A                 =  65,
-            B                 =  66,
-            C                 =  67,
-            D                 =  68,
-            E                 =  69,
-            F                 =  70,
-            G                 =  71,
-            H                 =  72,
-            I                 =  73,
-            J                 =  74,
-            K                 =  75,
-            L                 =  76,
-            M                 =  77,
-            N                 =  78,
-            O                 =  79,
-            P                 =  80,
-            Q                 =  81,
-            R                 =  82,
-            S                 =  83,
-            T                 =  84,
-            U                 =  85,
-            V                 =  86,
-            W                 =  87,
-            X                 =  88,
-            Y                 =  89,
-            Z                 =  90,
-            LEFT_BRACKET      =  91,  /* [ */
-            BACKSLASH         =  92,  /* \ */
-            RIGHT_BRACKET     =  93,  /* ] */
-            GRAVE_ACCENT      =  96,  /* ` */
-            WORLD_1           =  161, /* non-US #1 */
-            WORLD_2           =  162, /* non-US #2 */
+			Key_SPACE = 32,
+			Key_APOSTROPHE = 39, /* ' */
+			Key_COMMA = 44,		 /* , */
+			Key_MINUS = 45,		 /* - */
+			Key_PERIOD = 46,	 /* . */
+			Key_SLASH = 47,		 /* / */
+			Key_0 = 48,
+			Key_1 = 49,
+			Key_2 = 50,
+			Key_3 = 51,
+			Key_4 = 52,
+			Key_5 = 53,
+			Key_6 = 54,
+			Key_7 = 55,
+			Key_8 = 56,
+			Key_9 = 57,
+			Key_SEMICOLON = 59, /* ; */
+			Key_EQUAL = 61,		/* = */
+			Key_A = 65,
+			Key_B = 66,
+			Key_C = 67,
+			Key_D = 68,
+			Key_E = 69,
+			Key_F = 70,
+			Key_G = 71,
+			Key_H = 72,
+			Key_I = 73,
+			Key_J = 74,
+			Key_K = 75,
+			Key_L = 76,
+			Key_M = 77,
+			Key_N = 78,
+			Key_O = 79,
+			Key_P = 80,
+			Key_Q = 81,
+			Key_R = 82,
+			Key_S = 83,
+			Key_T = 84,
+			Key_U = 85,
+			Key_V = 86,
+			Key_W = 87,
+			Key_X = 88,
+			Key_Y = 89,
+			Key_Z = 90,
+			Key_LEFT_BRACKET = 91,	/* [ */
+			Key_BACKSLASH = 92,		/* \ */
+			Key_RIGHT_BRACKET = 93, /* ] */
+			Key_GRAVE_ACCENT = 96,	/* ` */
+			Key_WORLD_1 = 161,		/* non-US #1 */
+			Key_WORLD_2 = 162,		/* non-US #2 */
 
-            /* Function keys */
-            ESCAPE             = 256,
-            ENTER              = 257,
-            TAB                = 258,
-            BACKSPACE          = 259,
-            INSERT             = 260,
-            DELETE             = 261,
-            RIGHT              = 262,
-            LEFT               = 263,
-            DOWN               = 264,
-            UP                 = 265,
-            PAGE_UP            = 266,
-            PAGE_DOWN          = 267,
-            HOME               = 268,
-            END                = 269,
-            CAPS_LOCK          = 280,
-            SCROLL_LOCK        = 281,
-            NUM_LOCK           = 282,
-            PRINT_SCREEN       = 283,
-            PAUSE              = 284,
-            F1                 = 290,
-            F2                 = 291,
-            F3                 = 292,
-            F4                 = 293,
-            F5                 = 294,
-            F6                 = 295,
-            F7                 = 296,
-            F8                 = 297,
-            F9                 = 298,
-            F10                = 299,
-            F11                = 300,
-            F12                = 301,
-            F13                = 302,
-            F14                = 303,
-            F15                = 304,
-            F16                = 305,
-            F17                = 306,
-            F18                = 307,
-            F19                = 308,
-            F20                = 309,
-            F21                = 310,
-            F22                = 311,
-            F23                = 312,
-            F24                = 313,
-            F25                = 314,
-            KP_0               = 320,
-            KP_1               = 321,
-            KP_2               = 322,
-            KP_3               = 323,
-            KP_4               = 324,
-            KP_5               = 325,
-            KP_6               = 326,
-            KP_7               = 327,
-            KP_8               = 328,
-            KP_9               = 329,
-            KP_DECIMAL         = 330,
-            KP_DIVIDE          = 331,
-            KP_MULTIPLY        = 332,
-            KP_SUBTRACT        = 333,
-            KP_ADD             = 334,
-            KP_ENTER           = 335,
-            KP_EQUAL           = 336,
-            LEFT_SHIFT         = 340,
-            LEFT_CONTROL       = 341,
-            LEFT_ALT           = 342,
-            LEFT_SUPER         = 343,
-            RIGHT_SHIFT        = 344,
-            RIGHT_CONTROL      = 345,
-            RIGHT_ALT          = 346,
-            RIGHT_SUPER        = 347,
-            MENU               = 348,
-        };
+			/* Function keys */
+			Key_ESCAPE = 256,
+			Key_ENTER = 257,
+			Key_TAB = 258,
+			Key_BACKSPACE = 259,
+			Key_INSERT = 260,
+			Key_Key_DELETE = 261,
+			Key_RIGHT = 262,
+			Key_LEFT = 263,
+			Key_DOWN = 264,
+			Key_UP = 265,
+			Key_PAGE_UP = 266,
+			Key_PAGE_DOWN = 267,
+			Key_HOME = 268,
+			Key_END = 269,
+			Key_CAPS_LOCK = 280,
+			Key_SCROLL_LOCK = 281,
+			Key_NUM_LOCK = 282,
+			Key_PRINT_SCREEN = 283,
+			Key_PAUSE = 284,
+			Key_F1 = 290,
+			Key_F2 = 291,
+			Key_F3 = 292,
+			Key_F4 = 293,
+			Key_F5 = 294,
+			Key_F6 = 295,
+			Key_F7 = 296,
+			Key_F8 = 297,
+			Key_F9 = 298,
+			Key_F10 = 299,
+			Key_F11 = 300,
+			Key_F12 = 301,
+			Key_F13 = 302,
+			Key_F14 = 303,
+			Key_F15 = 304,
+			Key_F16 = 305,
+			Key_F17 = 306,
+			Key_F18 = 307,
+			Key_F19 = 308,
+			Key_F20 = 309,
+			Key_F21 = 310,
+			Key_F22 = 311,
+			Key_F23 = 312,
+			Key_F24 = 313,
+			Key_F25 = 314,
+			Key_KP_0 = 320,
+			Key_KP_1 = 321,
+			Key_KP_2 = 322,
+			Key_KP_3 = 323,
+			Key_KP_4 = 324,
+			Key_KP_5 = 325,
+			Key_KP_6 = 326,
+			Key_KP_7 = 327,
+			Key_KP_8 = 328,
+			Key_KP_9 = 329,
+			Key_KP_DECIMAL = 330,
+			Key_KP_DIVIDE = 331,
+			Key_KP_MULTIPLY = 332,
+			Key_KP_SUBTRACT = 333,
+			Key_KP_ADD = 334,
+			Key_KP_ENTER = 335,
+			Key_KP_EQUAL = 336,
+			Key_LEFT_SHIFT = 340,
+			Key_LEFT_CONTROL = 341,
+			Key_LEFT_ALT = 342,
+			Key_LEFT_SUPER = 343,
+			Key_RIGHT_SHIFT = 344,
+			Key_RIGHT_CONTROL = 345,
+			Key_RIGHT_ALT = 346,
+			Key_RIGHT_SUPER = 347,
+			Key_MENU = 348,
+		};
 
-        bool IsMouseButtonPressed(MouseButton button);
-        void SetCursorMode(CursorMode mode);
-        bool IsWindowHovered();
-        bool IsKeyPressed(Key key);
+		bool IsMouseButtonPressed(Window::MouseButton button);
+		void SetCursorMode(Window::CursorMode mode);
+		bool IsWindowHovered();
+		bool IsKeyPressed(Window::Key key);
 
-    private:
-        friend class Renderer;
-        
-        GLFWwindow* _pWindow = nullptr;
+	  private:
+		friend class Renderer;
 
-        int _videoWidth;
+		GLFWwindow *_pWindow = nullptr;
+
+		int _videoWidth;
         int _videoHeight;
 
         // Stores window values after setting fullscreen to revert on returning back to windowed mode

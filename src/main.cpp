@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
     while(!window.ShouldClose())
     {
         window.PollEvents();
-        if(window.IsKeyPressed(nmGfx::Window::Key::K))
+        if(window.IsKeyPressed(nmGfx::Window::Key::Key_K))
             std::cout << "Key 'K' is pressed" << std::endl;
         if(!window.IsWindowHovered())
             std::cout << "Cursor is out of window" << std::endl;

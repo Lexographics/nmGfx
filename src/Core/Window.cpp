@@ -228,36 +228,36 @@ namespace nmGfx
     int ModifierKeys_ToGLFW(Window::ModifierKeys mods)
     {
         int value = 0;
-        if(mods & Window::ModifierKeys::MOD_CONTROL)
-            value |= GLFW_MOD_CONTROL;
-        if(mods & Window::ModifierKeys::MOD_SHIFT)
-            value |= GLFW_MOD_SHIFT;
-        if(mods & Window::ModifierKeys::MOD_ALT)
-            value |= GLFW_MOD_ALT;
-        if(mods & Window::ModifierKeys::MOD_SUPER)
-            value |= GLFW_MOD_SUPER;
-        if(mods & Window::ModifierKeys::MOD_CAPS_LOCK)
-            value |= GLFW_MOD_CAPS_LOCK;
-        if(mods & Window::ModifierKeys::MOD_NUM_LOCK)
-            value |= GLFW_MOD_NUM_LOCK;
+		if (mods & Window::ModifierKeys::ModifierKeys_MOD_CONTROL)
+			value |= GLFW_MOD_CONTROL;
+		if (mods & Window::ModifierKeys::ModifierKeys_MOD_SHIFT)
+			value |= GLFW_MOD_SHIFT;
+		if (mods & Window::ModifierKeys::ModifierKeys_MOD_ALT)
+			value |= GLFW_MOD_ALT;
+		if (mods & Window::ModifierKeys::ModifierKeys_MOD_SUPER)
+			value |= GLFW_MOD_SUPER;
+		if (mods & Window::ModifierKeys::ModifierKeys_MOD_CAPS_LOCK)
+			value |= GLFW_MOD_CAPS_LOCK;
+		if (mods & Window::ModifierKeys::ModifierKeys_MOD_NUM_LOCK)
+			value |= GLFW_MOD_NUM_LOCK;
         return value;
     }
     Window::ModifierKeys ModifierKeys_ToEnum(int mods)
     {
         int value = 0;
         if(mods & GLFW_MOD_CONTROL)
-            value |= Window::ModifierKeys::MOD_CONTROL;
-        if(mods & GLFW_MOD_SHIFT)
-            value |= Window::ModifierKeys::MOD_SHIFT;
-        if(mods & GLFW_MOD_ALT)
-            value |= Window::ModifierKeys::MOD_ALT;
-        if(mods & GLFW_MOD_SUPER)
-            value |= Window::ModifierKeys::MOD_SUPER;
-        if(mods & GLFW_MOD_CAPS_LOCK)
-            value |= Window::ModifierKeys::MOD_CAPS_LOCK;
-        if(mods & GLFW_MOD_NUM_LOCK)
-            value |= Window::ModifierKeys::MOD_NUM_LOCK;
-        return (Window::ModifierKeys)value;
+			value |= Window::ModifierKeys::ModifierKeys_MOD_CONTROL;
+		if (mods & GLFW_MOD_SHIFT)
+			value |= Window::ModifierKeys::ModifierKeys_MOD_SHIFT;
+		if (mods & GLFW_MOD_ALT)
+			value |= Window::ModifierKeys::ModifierKeys_MOD_ALT;
+		if (mods & GLFW_MOD_SUPER)
+			value |= Window::ModifierKeys::ModifierKeys_MOD_SUPER;
+		if (mods & GLFW_MOD_CAPS_LOCK)
+			value |= Window::ModifierKeys::ModifierKeys_MOD_CAPS_LOCK;
+		if (mods & GLFW_MOD_NUM_LOCK)
+			value |= Window::ModifierKeys::ModifierKeys_MOD_NUM_LOCK;
+		return (Window::ModifierKeys)value;
     }
 
     int CursorMode_ToGLFW(Window::CursorMode mode)
