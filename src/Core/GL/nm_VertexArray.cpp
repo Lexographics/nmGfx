@@ -1,7 +1,7 @@
-#include "VertexArray.hpp"
+#include "nm_VertexArray.hpp"
 #include "glad/glad.h"
 #include <algorithm>
-#include "Model.hpp"
+#include "nm_Model.hpp"
 
 namespace nmGfx
 {

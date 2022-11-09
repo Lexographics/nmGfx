@@ -1,13 +1,13 @@
-#include "Renderer.hpp"
+#include "nm_Renderer.hpp"
 
 #include <vector>
 #include <string.h>
-#include "Core/Renderer.hpp"
+#include "Core/nm_Renderer.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/vector_angle.hpp"
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
-#include "Core/Matrix.hpp"
+#include "Core/nm_Matrix.hpp"
 
 namespace nmGfx
 {

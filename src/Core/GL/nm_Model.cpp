@@ -1,4 +1,4 @@
-#include "Model.hpp"
+#include "nm_Model.hpp"
 #include <vector>
 #include "glad/glad.h"
 #include "tiny_obj_loader.h"

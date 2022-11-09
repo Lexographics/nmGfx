@@ -6,12 +6,12 @@
 
 #include <glm/glm.hpp>
 
-#include "Window.hpp"
-#include "Core/GL/Model.hpp"
-#include "Core/Shader.hpp"
-#include "Core/GL/Texture.hpp"
-#include "Core/GL/Framebuffer.hpp"
-#include "Core/GL/Material.hpp"
+#include "nm_Window.hpp"
+#include "Core/GL/nm_Model.hpp"
+#include "Core/nm_Shader.hpp"
+#include "Core/GL/nm_Texture.hpp"
+#include "Core/GL/nm_Framebuffer.hpp"
+#include "Core/GL/nm_Material.hpp"
 
 namespace nmGfx
 {

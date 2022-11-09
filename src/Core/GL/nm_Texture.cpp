@@ -1,4 +1,4 @@
-#include "Texture.hpp"
+#include "nm_Texture.hpp"
 
 #include "glad/glad.h"
 #include "stb_image.h"

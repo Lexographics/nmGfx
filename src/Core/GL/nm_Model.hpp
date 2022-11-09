@@ -6,8 +6,8 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Core/GL/Buffer.hpp"
-#include "VertexArray.hpp"
+#include "Core/GL/nm_Buffer.hpp"
+#include "nm_VertexArray.hpp"
 
 namespace nmGfx
 {

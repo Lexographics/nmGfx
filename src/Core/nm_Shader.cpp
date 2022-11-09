@@ -1,8 +1,8 @@
-#include "Shader.hpp"
+#include "nm_Shader.hpp"
 #include <fstream>
 #include <sstream>
 #include "glad/glad.h"
-#include "Core/GL/Texture.hpp"
+#include "Core/GL/nm_Texture.hpp"
 
 namespace nmGfx
 {

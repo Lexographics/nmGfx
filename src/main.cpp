@@ -11,10 +11,10 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "Core/Renderer.hpp"
-#include "Core/GL/Model.hpp"
-#include "Core/GL/Material.hpp"
-#include "Core/Matrix.hpp"
+#include "Core/nm_Renderer.hpp"
+#include "Core/GL/nm_Model.hpp"
+#include "Core/GL/nm_Material.hpp"
+#include "Core/nm_Matrix.hpp"
 
 int main(int argc, char const *argv[])
 {

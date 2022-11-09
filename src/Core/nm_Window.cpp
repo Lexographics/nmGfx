@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include "nm_Window.hpp"
 #include <stdexcept>
 
 #include "glad/glad.h"

@@ -1,4 +1,4 @@
-#include "Buffer.hpp"
+#include "nm_Buffer.hpp"
 #include "glad/glad.h"
 
 namespace nmGfx

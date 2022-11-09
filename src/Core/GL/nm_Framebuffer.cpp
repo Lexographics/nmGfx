@@ -1,7 +1,7 @@
-#include "Framebuffer.hpp"
+#include "nm_Framebuffer.hpp"
 #include <stdio.h>
 #include "glad/glad.h"
-#include "Core/Window.hpp"
+#include "Core/nm_Window.hpp"
 
 namespace nmGfx
 {
