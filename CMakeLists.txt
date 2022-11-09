@@ -4,8 +4,6 @@ project(nmGfx VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-option(NMGFX_FIND_GLFW "" On)
-
 if(${NMGFX_FIND_GLFW})
 find_package(glfw3 REQUIRED)
 endif()
