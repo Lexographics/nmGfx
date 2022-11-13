@@ -54,11 +54,13 @@ namespace nmGfx
         glDrawBuffers(4, DrawBuffers);
 
 
+#ifdef NMGFX_PRINT_MESSAGES
         auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if(status != GL_FRAMEBUFFER_COMPLETE)
             printf("%s, %i", "Failed generating framebuffer: ", status);
         else
             printf("Framebuffer Complete. id:%i\n", _id);
+#endif
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
@@ -94,12 +96,13 @@ namespace nmGfx
         GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
         glDrawBuffers(2, DrawBuffers);
 
-
+#ifdef NMGFX_PRINT_MESSAGES
         auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if(status != GL_FRAMEBUFFER_COMPLETE)
             printf("%s, %i", "Failed generating framebuffer: ", status);
         else
             printf("Framebuffer Complete. id:%i\n", _id);
+#endif
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }

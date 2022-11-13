@@ -12,7 +12,9 @@ namespace nmGfx
         ifstream.open(file);
         if(!ifstream)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             fprintf(stderr, "Failed to load file: %s\n", file);
+#endif
             return;
         }
 
@@ -30,6 +32,7 @@ namespace nmGfx
         unsigned int id = glCreateShader(shaderType);
         glShaderSource(id, 1, &source, NULL);
         glCompileShader(id);
+#ifdef NMGFX_PRINT_MESSAGES
         {
             int  success;
             char infoLog[512];
@@ -44,6 +47,7 @@ namespace nmGfx
                     printf("%s Shader compilation failed.\n %s\n", "Fragment", infoLog);
             }
         }
+#endif
 
         return id;
     }
@@ -54,6 +58,7 @@ namespace nmGfx
         glAttachShader(id, fragmentShader);
         glLinkProgram(id);
         
+#ifdef NMGFX_PRINT_MESSAGES
         {
             int  success;
             char infoLog[512];
@@ -65,6 +70,7 @@ namespace nmGfx
                 printf("Shader Program compilation failed. \n %s\n", infoLog);
             }
         }
+#endif
 
         return id;
     }
@@ -101,8 +107,9 @@ namespace nmGfx
 
         glDeleteShader(_vertexShaderID);
         glDeleteShader(_fragmentShaderID);
-
+#ifdef NMGFX_PRINT_MESSAGES
         printf("Loaded shader with id: %i, path: %s\n", _programID, _shaderName.c_str());
+#endif
     }
 
     void Shader::Use()
@@ -127,7 +134,9 @@ namespace nmGfx
         int loc = glGetUniformLocation(_programID, name.c_str());
         if(loc < 0)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
             return;
         }
         glUniform1f(loc, value);
@@ -139,7 +148,9 @@ namespace nmGfx
         int loc = glGetUniformLocation(_programID, name.c_str());
         if(loc < 0)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
             return;
         }
         glUniform3f(loc, value.x, value.y, value.z);
@@ -150,7 +161,9 @@ namespace nmGfx
         int loc = glGetUniformLocation(_programID, name.c_str());
         if(loc < 0)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
             return;
         }
         glUniform4f(loc, value.x, value.y, value.z, value.w);
@@ -162,7 +175,9 @@ namespace nmGfx
         int loc = glGetUniformLocation(_programID, name.c_str());
         if(loc < 0)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
             return;
         }
         glUniformMatrix4fv(loc, 1, GL_FALSE, &value[0][0]);
@@ -174,7 +189,9 @@ namespace nmGfx
         int loc = glGetUniformLocation(_programID, name.c_str());
         if(loc < 0)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
             return;
         }
         glUniform1i(loc, value);
@@ -186,7 +203,9 @@ namespace nmGfx
         int loc = glGetUniformLocation(_programID, name.c_str());
         if(loc < 0)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
             return;
         }
         texture.Use(slot);
@@ -199,7 +218,9 @@ namespace nmGfx
         int loc = glGetUniformLocation(_programID, name.c_str());
         if(loc < 0)
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
             return;
         }
         glActiveTexture(GL_TEXTURE0+slot);

@@ -49,7 +49,9 @@ namespace nmGfx
         }
         else
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Error: Failed to load texture from pixel data.\n");
+#endif
         }
     }
 
@@ -75,7 +77,9 @@ namespace nmGfx
         }
         else
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Error: Failed to load texture: %s\n", path);
+#endif
         }
         stbi_image_free(data);
     }
@@ -102,7 +106,9 @@ namespace nmGfx
         }
         else
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Error: Failed to load texture\n");
+#endif
             return false;
         }
         stbi_image_free(data);
@@ -139,7 +145,9 @@ namespace nmGfx
             }
             else
             {
+#ifdef NMGFX_PRINT_MESSAGES
                 printf("Error: Failed to load texture: %s\n", paths[i].c_str());
+#endif
             }
         }
     }

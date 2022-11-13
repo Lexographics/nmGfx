@@ -29,7 +29,9 @@ namespace nmGfx
 
 static void error_callback(int error, const char* description)
 {
+#ifdef NMGFX_PRINT_MESSAGES
     fprintf(stderr, "Error: %s\n", description);
+#endif
 }
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -92,7 +94,11 @@ namespace nmGfx
     bool Window::ShouldClose()
     {
         if(_pWindow == nullptr)
+#ifdef NMGFX_PRINT_MESSAGES
             return printf("Can't call ShouldClose, Window was null\n") && 0;
+#else
+            return 0;
+#endif
         return glfwWindowShouldClose(_pWindow);
     }
 

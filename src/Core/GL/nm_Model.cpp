@@ -19,8 +19,10 @@ namespace nmGfx
 
         if(!err.empty())
         {
+#ifdef NMGFX_PRINT_MESSAGES
             printf("Error Loading model: %s : %s\n", path, err.c_str());
             // return;
+#endif
         }
 
         // layout -> vec3 pos, vec3 normal, vec2 uv
@@ -106,7 +108,9 @@ namespace nmGfx
         SetAttribute(2, AttributeType::VEC2);
         UploadAttributes();
 
+#ifdef NMGFX_PRINT_MESSAGES
         printf("Loaded Model %s, Vertex Count: %i\n",path, (int)(vertexData.size() / 8));
+#endif
 
         return;
     };

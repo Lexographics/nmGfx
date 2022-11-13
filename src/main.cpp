@@ -1,5 +1,7 @@
 #ifdef NMGFX_BUILD_PLAYGROUND
 
+#define NMGFX_PRINT_MESSAGES
+
 #include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
