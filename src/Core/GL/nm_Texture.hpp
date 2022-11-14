@@ -47,20 +47,22 @@ namespace nmGfx
             inline int GetWidth()  { return _width; }
             inline int GetHeight()  { return _height; }
             inline int GetChannels()  { return _channels; }
-            // Loads from raw pixel data
-            void LoadFromData(unsigned char* data, int width, int height, int channels, TextureType type = TextureType::TEXTURE2D);
+			inline unsigned char *GetPixels() { return _pixels; }
+			// Loads from raw pixel data
+			void LoadFromData(unsigned char* data, int width, int height, int channels, TextureType type = TextureType::TEXTURE2D);
 
             unsigned int ID() { return _id; }
         private:
             int _width = 0;
             int _height = 0;
             int _channels = 0;
+			unsigned char *_pixels{nullptr};
 
-            unsigned int _id = 0;
+			unsigned int _id = 0;
 
-            TextureType _type;
+			TextureType _type;
 
-            friend class Renderer;
+			friend class Renderer;
     };
 } // namespace nmGfx
 
