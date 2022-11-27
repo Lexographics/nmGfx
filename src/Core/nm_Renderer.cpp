@@ -207,63 +207,62 @@ namespace nmGfx
         _fullscreen._model.Draw();
     }
 
+	void Renderer::Begin2D(const glm::mat4 cameraTransform, const glm::vec2 &cameraCenter /*= {0.5f, 0.5f}*/) {
+		_data2d._frameBuffer.Use();
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glEnable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    void Renderer::Begin2D(const glm::mat4 cameraTransform)
-    {
-        _data2d._frameBuffer.Use();
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glEnable(GL_DEPTH_TEST);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		_data2d._shader.Use();
 
-        _data2d._shader.Use();
+		float width = (float)_window.GetVideoWidth();
+		float height = (float)_window.GetVideoHeight();
+		_data2d._projectionMatrix = CalculateOrtho(
+			0 - (cameraCenter.x * width),
+			width - (cameraCenter.x * width),
+			0 - (cameraCenter.y * height),
+			height - (cameraCenter.y * height),
+			0.f,
+			10.f);
+		_data2d._viewMatrix = glm::inverse(cameraTransform);
 
-        float halfwidth = (float)_window.GetVideoWidth() / 2.f;
-        float halfheight = (float)_window.GetVideoHeight() / 2.f;
-        _data2d._projectionMatrix = CalculateOrtho(-halfwidth, halfwidth, halfheight, -halfheight, 0.f, 10.f);
-        _data2d._viewMatrix = glm::inverse(cameraTransform);
+		glm::mat4 view_proj = _data2d._projectionMatrix * _data2d._viewMatrix;
+		_data2d._shader.UniformMat4("uViewProjection", view_proj);
+	}
 
-        glm::mat4 view_proj = _data2d._projectionMatrix * _data2d._viewMatrix;
-        _data2d._shader.UniformMat4("uViewProjection", view_proj);
-    }
+	void Renderer::End2D() {
+		_window.UnbindFramebuffer();
+	}
 
-    void Renderer::End2D()
-    {
-        _window.UnbindFramebuffer();
-    }
+	int Renderer::Get2DPickID(int x, int y) {
+		int id = 0;
+		glReadBuffer(GL_COLOR_ATTACHMENT1);
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &id);
+		return id;
+	}
 
-    int Renderer::Get2DPickID(int x, int y)
-    {
-        int id = 0;
-        glReadBuffer(GL_COLOR_ATTACHMENT1);
-        glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &id);
-        return id;
-    }
+	int Renderer::Get2DPickIDSafe(int x, int y) {
+		_data2d._frameBuffer.Use();
+		int id = Get2DPickID(x, y);
+		_window.UnbindFramebuffer();
 
-    int Renderer::Get2DPickIDSafe(int x, int y)
-    {
-        _data2d._frameBuffer.Use();
-        int id = Get2DPickID(x, y);
-        _window.UnbindFramebuffer();
+		return id;
+	}
 
-        return id;
-    }
+	void Renderer::DrawTexture(Texture *texture, const glm::mat4 &transform, const glm::vec3 &tint /*= glm::vec3(1.f)*/, int drawID /*= 0*/) {
+		_data2d._shader.UniformMat4("uModel", transform);
+		_data2d._shader.UniformVec3("uTint", tint);
+		_data2d._shader.UniformTexture("uTexture", texture ? *(texture) : _whiteTexture, 1);
 
-    void Renderer::DrawTexture(Texture* texture, const glm::mat4& transform, const glm::vec3& tint /*= glm::vec3(1.f)*/, int drawID /*= 0*/)
-    {
-        _data2d._shader.UniformMat4("uModel", transform);
-        _data2d._shader.UniformVec3("uTint", tint);
-        _data2d._shader.UniformTexture("uTexture", texture ? *(texture) : _whiteTexture, 1);
+		_data2d._shader.UniformInt("uDrawID", drawID);
+		_data2d._model2d.Draw();
+	}
 
-        _data2d._shader.UniformInt("uDrawID", drawID);
-        _data2d._model2d.Draw();
-    }
+	void Renderer::Draw2DLayer() {
+		glm::mat4 fullproj = glm::ortho(0.f, (float)_window.GetWindowWidth(), 0.f, (float)_window.GetWindowHeight(), 0.f, 10.f); // no view matrix
+		_fullscreen._shader.Use();
+		_fullscreen._shader.UniformTexture("gAlbedo", _data2d._frameBuffer._gAlbedo, 0);
 
-    void Renderer::Draw2DLayer()
-    {
-        glm::mat4 fullproj = glm::ortho(0.f, (float)_window.GetWindowWidth(), 0.f, (float)_window.GetWindowHeight(), 0.f, 10.f); // no view matrix
-        _fullscreen._shader.Use();
-        _fullscreen._shader.UniformTexture("gAlbedo", _data2d._frameBuffer._gAlbedo, 0);
-        
-        _fullscreen._model.Draw();
-    }
+		_fullscreen._model.Draw();
+	}
 } // namespace nmGfx

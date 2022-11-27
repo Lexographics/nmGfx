@@ -73,20 +73,20 @@ namespace nmGfx
         /**
          * @brief Begin 2D context, use shaders, calculate matrices (camera is on center)
          * 
-         * @param projectionMatrix
          * @param cameraTransform Camera transform (NOT view matrix)
+         * @param cameraCenter camera pivot point. {0.f, 0.f} -> top left, {1.f, 1.f} -> bottom right
          */
-        void Begin2D(const glm::mat4 cameraTransform);
-        void End2D();
+		void Begin2D(const glm::mat4 cameraTransform, const glm::vec2 &cameraCenter = {0.5f, 0.5f});
+		void End2D();
 
-        /**
-         * @brief Returns id of given x, y coordinate in 2d space !Must be called within 2d context(Between Begin2D-End2D block)
-         * 
-         * @param x 
-         * @param y 
-         * @return int id
-         */
-        int Get2DPickID(int x, int y);
+		/**
+		 * @brief Returns id of given x, y coordinate in 2d space !Must be called within 2d context(Between Begin2D-End2D block)
+		 *
+		 * @param x
+		 * @param y
+		 * @return int id
+		 */
+		int Get2DPickID(int x, int y);
 
         /**
          * @brief Returns id of given x, y coordinate in 2d space. must be called outside of a context
