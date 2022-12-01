@@ -76,7 +76,7 @@ namespace nmGfx
          * @param cameraTransform Camera transform (NOT view matrix)
          * @param cameraCenter camera pivot point. {0.f, 0.f} -> top left, {1.f, 1.f} -> bottom right
          */
-		void Begin2D(const glm::mat4 cameraTransform, const glm::vec2 &cameraCenter = {0.5f, 0.5f});
+		void Begin2D(const glm::mat4 cameraTransform, const glm::vec2 &cameraCenter = {0.5f, 0.5f}, const glm::vec4& clearColor = {0.f, 0.f, 0.f, 0.f});
 		void End2D();
 
 		/**

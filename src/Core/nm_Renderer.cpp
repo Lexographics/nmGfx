@@ -207,9 +207,9 @@ namespace nmGfx
         _fullscreen._model.Draw();
     }
 
-	void Renderer::Begin2D(const glm::mat4 cameraTransform, const glm::vec2 &cameraCenter /*= {0.5f, 0.5f}*/) {
+	void Renderer::Begin2D(const glm::mat4 cameraTransform, const glm::vec2 &cameraCenter /*= {0.5f, 0.5f}*/, const glm::vec4& clearColor /*= {0.f, 0.f, 0.f, 0.f}*/) {
 		_data2d._frameBuffer.Use();
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
