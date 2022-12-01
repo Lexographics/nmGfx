@@ -73,6 +73,9 @@ namespace nmGfx
         float top,
         float near,
         float far);
+    
+    bool DecomposeMatrix(const glm::mat4 &transform, glm::vec3 &translation, glm::vec3 &rotation, glm::vec3 &scale);
+    
 } // namespace nmGfx
 
 

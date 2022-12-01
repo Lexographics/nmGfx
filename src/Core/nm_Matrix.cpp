@@ -1,6 +1,7 @@
 #include "nm_Matrix.hpp"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtx/matrix_decompose.hpp"
 
 namespace nmGfx
 {
@@ -51,4 +52,18 @@ namespace nmGfx
     {
         return glm::ortho(left, right, bottom, top, near, far);
     }
+
+    bool DecomposeMatrix(const glm::mat4 &transform, glm::vec3 &translation, glm::vec3 &rotation, glm::vec3 &scale) {
+		glm::quat rot;
+		glm::vec3 skew;
+		glm::vec4 perspective;
+
+		bool r = glm::decompose(transform, scale, rot, translation, skew, perspective);
+
+		rot = glm::conjugate(rot);
+
+		rotation = glm::eulerAngles(rot) * 180.f / glm::pi<float>();
+
+		return r;
+	}
 } // namespace nmGfx
