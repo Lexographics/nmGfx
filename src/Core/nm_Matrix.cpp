@@ -11,10 +11,12 @@ namespace nmGfx
         const glm::vec3& offset /*= glm::vec3(0.f, 0.f, 0.f)*/,
         const glm::mat4& baseTransform /*= glm::mat4(1.f)*/)
     {
-        glm::mat4 transform = glm::translate(baseTransform, translation)
+        glm::mat4 transform =
+            glm::translate(baseTransform, translation)
             * glm::rotate(glm::mat4(1.f), glm::radians(rotation.y), {0.f, 1.f, 0.f})
             * glm::rotate(glm::mat4(1.f), glm::radians(rotation.x), {1.f, 0.f, 0.f})
             * glm::rotate(glm::mat4(1.f), glm::radians(rotation.z), {0.f, 0.f, 1.f})
+            * glm::translate(glm::mat4(1.f), offset)
             * glm::scale(glm::mat4(1.f), {scale.x, scale.y, scale.z});
   
         return transform;
