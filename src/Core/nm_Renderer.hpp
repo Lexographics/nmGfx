@@ -12,6 +12,10 @@
 #include "Core/GL/nm_Texture.hpp"
 #include "Core/GL/nm_Framebuffer.hpp"
 #include "Core/GL/nm_Material.hpp"
+#include "Core/GL/nm_Font.hpp"
+
+class FT_LibraryRec_;
+class FT_FaceRec_;
 
 namespace nmGfx
 {
@@ -19,7 +23,7 @@ namespace nmGfx
     class Renderer
     {
     public:
-        void Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags);
+        bool Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags);
         
         Window& GetWindow() { return _window; }
         
@@ -31,6 +35,18 @@ namespace nmGfx
          * 
          */
         void ClearLayers();
+
+
+        void BeginPass(Framebuffer& pass);
+        void EndPass();
+        void SetClearColor(float r, float g, float b, float a);
+        void ClearColor();
+        void ClearDepth();
+        void SetDepthTesting(bool enabled);
+        void DrawQuad(Shader& shader);
+        void DrawText(Shader& shader, Font& font, const std::string& text, float scale = 1.0f);
+        glm::vec2 CalcTextSize(Font& font, const std::string& text, float scale = 1.0f);
+        void DrawPassLayer(Framebuffer& pass);
 
         /**
          * @brief Begin 3D context, use shaders, calculate matrices
@@ -138,7 +154,12 @@ namespace nmGfx
         DataFullscreen& GetDataFullscreen() { return _fullscreen; }
         Data3D& GetData3D() { return _data3d; }
         Data2D& GetData2D() { return _data2d; }
+
+        bool LoadFont(Font* font, unsigned char* data, unsigned size);
+        bool LoadFont(Font* font, const std::string& path);
     private:
+        bool LoadFontWithFace(Font* font, FT_FaceRec_*& face);
+
         Window _window{};
 
         Texture _whiteTexture;
@@ -147,6 +168,11 @@ namespace nmGfx
 
         Data3D _data3d;
         Data2D _data2d;
+
+        VertexArray _GlyphVAO{};
+        Buffer _GlyphVBO{};
+
+        std::unique_ptr<FT_LibraryRec_*> _Freetype{};
     };
     
 } // namespace nmGfx

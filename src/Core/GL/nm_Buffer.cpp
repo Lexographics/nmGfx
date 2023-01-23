@@ -26,6 +26,11 @@ namespace nmGfx
         glBindBuffer(GetBufferType(_type), _bufferID);
     }
 
+    void Buffer::Unbind()
+    {
+        glBindBuffer(GetBufferType(_type), 0);
+    }
+
     Buffer::~Buffer()
     {
         Delete();
@@ -51,5 +56,9 @@ namespace nmGfx
     void Buffer::BufferData(const void* data, uint32_t size, BufferUsage usage)
     {
         glBufferData(GetBufferType(_type), size, data, GetBufferUsage(usage));
+    }
+
+    void Buffer::BufferSubData(const void* data, uint32_t size, uint32_t offset) {
+        glBufferSubData(GetBufferType(_type), offset, size, data);
     }
 } // namespace nmGfx

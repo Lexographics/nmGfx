@@ -3,6 +3,8 @@
 #include <algorithm>
 #include "nm_Model.hpp"
 
+#include <iostream>
+
 namespace nmGfx
 {
     void VertexArray::Create()
@@ -32,6 +34,7 @@ namespace nmGfx
         return type == AttributeType::FLOAT ? sizeof(GLfloat)
             : type == AttributeType::VEC2  ? sizeof(GLfloat) * 2
             : type == AttributeType::VEC3  ? sizeof(GLfloat) * 3
+            : type == AttributeType::VEC4  ? sizeof(GLfloat) * 4
             : 0; 
     }
     static uint32_t GetGLAttributeElementCount(AttributeType type)
@@ -39,6 +42,7 @@ namespace nmGfx
         return type == AttributeType::FLOAT ? 1
             : type == AttributeType::VEC2  ? 2
             : type == AttributeType::VEC3  ? 3
+            : type == AttributeType::VEC4  ? 4
             : 0; 
     }
     static GLenum GetGLAttributeType(AttributeType type)
@@ -46,6 +50,7 @@ namespace nmGfx
         return type == AttributeType::FLOAT ? GL_FLOAT
             : type == AttributeType::VEC2  ? GL_FLOAT
             : type == AttributeType::VEC3  ? GL_FLOAT
+            : type == AttributeType::VEC4  ? GL_FLOAT
             : GL_NONE; 
     }
 

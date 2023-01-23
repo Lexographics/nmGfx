@@ -33,6 +33,17 @@ namespace nmGfx
         return CalculateModelMatrix({position.x, position.y, 0.f}, {0.f, 0.f, rotation}, {scale.x, scale.y, 1.f}, {offset.x, offset.y, 0.f}, baseTransform);
     }
 
+    glm::mat4 CalculateProjectionMatrix(float width, float height, float centerX, float centerY, float near, float far) {
+        glm::mat4 mat =  CalculateOrtho(
+			0 - (centerX * width),
+			width - (centerX * width),
+			0 - (centerY * height),
+			height - (centerY * height),
+			near,
+			far);
+        return mat;
+    }
+
     glm::mat4 CalculatePerspective(
         float aspect,
         float fov,

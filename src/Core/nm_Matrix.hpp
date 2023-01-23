@@ -40,6 +40,9 @@ namespace nmGfx
         const glm::vec2& offset = glm::vec2(0.f, 0.f),
         const glm::mat4& baseTransform = glm::mat4(1.f));
 
+    
+    glm::mat4 CalculateProjectionMatrix(float width, float height, float centerX, float centerY, float near = 0.f, float far = 10.f);
+
 
 
     /**

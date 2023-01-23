@@ -30,8 +30,10 @@ namespace nmGfx
             void Delete();
 
             void BufferData(const void* data, uint32_t size, BufferUsage usage);
+            void BufferSubData(const void* data, uint32_t size, uint32_t offset);
 
             void Use();
+            void Unbind();
         
         private:
             unsigned int _bufferID = 0;

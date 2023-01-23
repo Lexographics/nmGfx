@@ -9,9 +9,13 @@
 #include <GLFW/glfw3.h>
 #include "Core/nm_Matrix.hpp"
 
+#include "ft2build.h"
+#include FT_FREETYPE_H
+
+
 namespace nmGfx
 {
-    void Renderer::Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags)
+    bool Renderer::Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags)
     {
         _window = nmGfx::Window(windowWidth, windowHeight, videoWidth, videoHeight, title, flags);
 
@@ -116,10 +120,35 @@ namespace nmGfx
             _data3d._skyboxModel.SetAttribute(0, AttributeType::VEC3);
             _data3d._skyboxModel.UploadAttributes();
         }
+
+        _Freetype = std::make_unique<FT_Library>();
+        if (FT_Init_FreeType(_Freetype.get()))  
+        {
+            return false;
+        }
+
+    
+        _GlyphVAO.Create();
+        _GlyphVBO.Create(BufferType::VERTEX_BUFFER);
+
+        _GlyphVAO.Use();
+        _GlyphVBO.Use();
+
+        _GlyphVBO.BufferData(nullptr, sizeof(float) * 6 * 4, BufferUsage::DYNAMIC_DRAW);
+
+        _GlyphVAO.ResetAttributes();
+        _GlyphVAO.SetAttribute(0, AttributeType::VEC4);
+        _GlyphVAO.UploadAttributes();
+
+        _GlyphVBO.Unbind();
+        VertexArray::Unbind();
+
+        return true;
     }
 
     Renderer::~Renderer()
     {
+        FT_Done_FreeType(*_Freetype.get());
         // glfwTerminate();
     }
 
@@ -207,23 +236,111 @@ namespace nmGfx
         _fullscreen._model.Draw();
     }
 
+    void Renderer::BeginPass(Framebuffer& pass) {
+        pass.Use();
+    }
+    void Renderer::EndPass() {
+        _window.UnbindFramebuffer();
+    }
+
+    void Renderer::SetClearColor(float r, float g, float b, float a) {
+        glClearColor(r, g, b, a);
+    }
+    void Renderer::ClearColor() {
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+    void Renderer::ClearDepth() {
+        glClear(GL_DEPTH_BUFFER_BIT);
+    }
+    void Renderer::SetDepthTesting(bool enabled) {
+        if(enabled)
+            glEnable(GL_DEPTH_TEST);
+        else 
+            glDisable(GL_DEPTH_TEST);
+    }
+    void Renderer::DrawQuad(Shader& shader) {
+        shader.Use();
+        _data2d._model2d.Draw();
+    }
+    void Renderer::DrawText(nmGfx::Shader &s, Font& font, const std::string& text, float scale)
+    {
+        // activate corresponding render state	
+        s.Use();
+        // s.UniformVec3("textColor", color);
+        _GlyphVAO.Use();
+
+        // iterate through all characters
+        std::string::const_iterator c;
+        float x = 0.f;
+        float y = 0.f;
+        for (c = text.begin(); c != text.end(); c++)
+        {
+            Font::Character ch = font._Characters[*c];
+
+
+            float xpos = x + ch.Bearing.x * scale;
+            float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+
+            float w = ch.Size.x * scale;
+            float h = ch.Size.y * scale;
+            float vertices[6][4] = {
+                { xpos,     ypos + h,   0.0f, 0.0f },            
+                { xpos,     ypos,       0.0f, 1.0f },
+                { xpos + w, ypos,       1.0f, 1.0f },
+
+                { xpos,     ypos + h,   0.0f, 0.0f },
+                { xpos + w, ypos,       1.0f, 1.0f },
+                { xpos + w, ypos + h,   1.0f, 0.0f }           
+            };
+            // render glyph texture over quad
+            s.UniformTexture("text", ch.TextureID, 0);
+            // update content of VBO memory
+            _GlyphVBO.Use();
+            _GlyphVBO.BufferSubData(vertices, sizeof(vertices), 0);
+            // glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+            x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+        }
+        VertexArray::Unbind();
+    }
+
+    glm::vec2 Renderer::CalcTextSize(Font& font, const std::string& text, float scale) {
+        glm::vec2 size{0.f, 0.f};
+
+        std::string::const_iterator c;
+        for (c = text.begin(); c != text.end(); c++)
+        {
+            Font::Character ch = font._Characters[*c];
+            size.x += (ch.Advance >> 6) * scale;
+            if(ch.Size.y > size.y)
+                size.y = ch.Size.y;
+        }
+        
+        return size;
+    }
+
+    void Renderer::DrawPassLayer(Framebuffer& pass) {
+        glm::mat4 fullproj = glm::ortho(0.f, (float)_window.GetWindowWidth(), 0.f, (float)_window.GetWindowHeight(), 0.f, 10.f); // no view matrix
+		_fullscreen._shader.Use();
+		_fullscreen._shader.UniformTexture("gAlbedo", pass.GetAlbedoID(), 0);
+
+		_fullscreen._model.Draw();
+    }
+
+
 	void Renderer::Begin2D(const glm::mat4 cameraTransform, const glm::vec2 &cameraCenter /*= {0.5f, 0.5f}*/, const glm::vec4& clearColor /*= {0.f, 0.f, 0.f, 0.f}*/) {
 		_data2d._frameBuffer.Use();
-		glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
-		glEnable(GL_DEPTH_TEST);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        SetClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
+		SetDepthTesting(true);
+        ClearColor();
+        ClearDepth();
 
 		_data2d._shader.Use();
 
 		float width = (float)_window.GetVideoWidth();
 		float height = (float)_window.GetVideoHeight();
-		_data2d._projectionMatrix = CalculateOrtho(
-			0 - (cameraCenter.x * width),
-			width - (cameraCenter.x * width),
-			0 - (cameraCenter.y * height),
-			height - (cameraCenter.y * height),
-			0.f,
-			10.f);
+		_data2d._projectionMatrix = CalculateProjectionMatrix(width, height, cameraCenter.x, cameraCenter.y, 0.f, 10.f);
 		_data2d._viewMatrix = glm::inverse(cameraTransform);
 
 		glm::mat4 view_proj = _data2d._projectionMatrix * _data2d._viewMatrix;
@@ -265,4 +382,72 @@ namespace nmGfx
 
 		_fullscreen._model.Draw();
 	}
+
+
+    bool Renderer::LoadFontWithFace(Font* font, FT_Face& face) {
+        if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
+        {
+            return false;
+        }
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
+  
+        for (int c = 0; c < 128; c++)
+        {
+            if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+                continue;
+
+            unsigned int texture;
+            glGenTextures(1, &texture);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RED,
+                face->glyph->bitmap.width,
+                face->glyph->bitmap.rows,
+                0,
+                GL_RED,
+                GL_UNSIGNED_BYTE,
+                face->glyph->bitmap.buffer
+            );
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            Font::Character character = {
+                texture, 
+                glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+                glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+                static_cast<unsigned int>(face->glyph->advance.x)
+            };
+            font->_Characters[c] = character;
+        }
+
+        FT_Done_Face(face);
+        return true;
+    }
+    bool Renderer::LoadFont(Font* font, unsigned char* data, unsigned size) {
+        FT_Face face;
+
+        if (FT_New_Memory_Face(*_Freetype.get(), data, size, 0, &face))
+        {  
+            return false;
+        }
+        FT_Set_Pixel_Sizes(face, 0, 48);  
+
+        return LoadFontWithFace(font, face);
+    }
+
+    bool Renderer::LoadFont(Font* font, const std::string& path) {
+        FT_Face face;
+
+        if (FT_New_Face(*_Freetype.get(), path.c_str(), 0, &face))
+        {  
+            return false;
+        }
+        FT_Set_Pixel_Sizes(face, 0, 48);  
+
+        return LoadFontWithFace(font, face);
+    }
 } // namespace nmGfx
