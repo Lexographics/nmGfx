@@ -43,6 +43,7 @@ namespace nmGfx
         void ClearColor();
         void ClearDepth();
         void SetDepthTesting(bool enabled);
+        void SetBlending(bool enabled);
         void DrawQuad(Shader& shader);
         void DrawText(Shader& shader, Font& font, const std::string& text, float scale = 1.0f);
         glm::vec2 CalcTextSize(Font& font, const std::string& text, float scale = 1.0f);

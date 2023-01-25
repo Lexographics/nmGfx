@@ -258,6 +258,12 @@ namespace nmGfx
         else 
             glDisable(GL_DEPTH_TEST);
     }
+    void Renderer::SetBlending(bool enabled) {
+        if(enabled)
+            glEnable(GL_BLEND);
+        else 
+            glDisable(GL_BLEND);
+    }
     void Renderer::DrawQuad(Shader& shader) {
         shader.Use();
         _data2d._model2d.Draw();
