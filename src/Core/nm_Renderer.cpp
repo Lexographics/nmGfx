@@ -15,7 +15,7 @@
 
 namespace nmGfx
 {
-    bool Renderer::Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags)
+    bool Renderer::Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, unsigned int flags)
     {
         _window = nmGfx::Window(windowWidth, windowHeight, videoWidth, videoHeight, title, flags);
 

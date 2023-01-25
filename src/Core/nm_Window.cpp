@@ -41,7 +41,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 namespace nmGfx
 {
-    Window::Window(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags)
+    Window::Window(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, unsigned int flags)
         : _videoWidth(videoWidth), _videoHeight(videoHeight)
     {
         if(!glfwInit())
@@ -51,6 +51,10 @@ namespace nmGfx
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwSetErrorCallback(error_callback);
+
+        if (flags & WindowFlags::NO_WINDOW) {
+            glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        }
 
         _pWindow = glfwCreateWindow(windowWidth, windowHeight, title, NULL, NULL);
         if(!_pWindow)
