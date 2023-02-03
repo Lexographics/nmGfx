@@ -19,6 +19,7 @@ namespace nmGfx
 
         
         void UniformFloat(const std::string& name, float value);
+        void UniformVec2(const std::string& name, glm::vec2 value);
         void UniformVec3(const std::string& name, glm::vec3 value);
         void UniformVec4(const std::string& name, glm::vec4 value);
         void UniformMat4(const std::string& name, glm::mat4 value);
