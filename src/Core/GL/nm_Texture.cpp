@@ -66,7 +66,9 @@ namespace nmGfx
 			_pixels = nullptr;
 		}
 
+		stbi_set_flip_vertically_on_load(true);
 		_pixels = stbi_load(path, &_width, &_height, &_channels, 0);
+		stbi_set_flip_vertically_on_load(false);
 		if (_pixels) {
 			// glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -94,8 +96,9 @@ namespace nmGfx
 			stbi_image_free(_pixels);
 			_pixels = nullptr;
 		}
-
+		stbi_set_flip_vertically_on_load(true);
 		_pixels = stbi_load_from_memory(filedata, size, &_width, &_height, &_channels, 0);
+		stbi_set_flip_vertically_on_load(false);
 		if (_pixels) {
 			// glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
