@@ -23,7 +23,7 @@ namespace nmGfx
     class Renderer
     {
     public:
-        bool Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags);
+        bool Init(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, unsigned int flags);
         
         Window& GetWindow() { return _window; }
         

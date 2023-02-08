@@ -11,6 +11,7 @@ namespace nmGfx
     {
         NONE = 0,
         FULLSCREEN = 1 << 1,
+		NO_WINDOW = 1 << 2,
     };
 
     // pure virtual base class that has window methods
@@ -27,7 +28,7 @@ namespace nmGfx
         // void Clear(uint32_t bits = ClearBit::COLOR);
 
         ~Window() = default;
-        Window(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, WindowFlags flags);
+        Window(int windowWidth, int windowHeight, int videoWidth, int videoHeight, const char* title, unsigned int flags);
         Window() = default;
 
         void SetFullscreen(bool fullscreen);

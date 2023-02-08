@@ -142,6 +142,19 @@ namespace nmGfx
         glUniform1f(loc, value);
     }
 
+    void Shader::UniformVec2(const std::string& name, glm::vec2 value)
+    {
+        Use();
+        int loc = glGetUniformLocation(_programID, name.c_str());
+        if(loc < 0)
+        {
+#ifdef NMGFX_PRINT_MESSAGES
+            printf("Failed to get uniform location: %s, Program ID: %i\n", name.c_str(), _programID);
+#endif
+            return;
+        }
+        glUniform2f(loc, value.x, value.y);
+    }
     void Shader::UniformVec3(const std::string& name, glm::vec3 value)
     {
         Use();
