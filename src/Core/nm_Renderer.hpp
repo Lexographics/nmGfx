@@ -114,7 +114,7 @@ namespace nmGfx
          */
         int Get2DPickIDSafe(int x, int y);
 
-        void DrawTexture(Texture* texture, const glm::mat4& transform, const glm::vec3& tint = glm::vec3(1.f), int drawID = 0);
+        void DrawTexture(Texture* texture, const glm::mat4& transform, const glm::vec4& tint = glm::vec4(1.f), int drawID = 0);
 
         /**
          * @brief Draws 2d layer on full screen
