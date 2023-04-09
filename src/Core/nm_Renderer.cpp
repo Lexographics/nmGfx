@@ -435,7 +435,7 @@ namespace nmGfx
         FT_Done_Face(face);
         return true;
     }
-    bool Renderer::LoadFont(Font* font, unsigned char* data, unsigned size) {
+    bool Renderer::LoadFont(Font* font, const unsigned char* data, unsigned size) {
         FT_Face face;
 
         if (FT_New_Memory_Face(*_Freetype.get(), data, size, 0, &face))

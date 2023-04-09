@@ -156,7 +156,7 @@ namespace nmGfx
         Data3D& GetData3D() { return _data3d; }
         Data2D& GetData2D() { return _data2d; }
 
-        bool LoadFont(Font* font, unsigned char* data, unsigned size);
+        bool LoadFont(Font* font, const unsigned char* data, unsigned size);
         bool LoadFont(Font* font, const std::string& path);
     private:
         bool LoadFontWithFace(Font* font, FT_FaceRec_*& face);

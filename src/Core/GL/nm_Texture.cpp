@@ -89,7 +89,7 @@ namespace nmGfx
 		}
 	}
 
-	bool Texture::Load2DFromMemory(unsigned char *filedata, size_t size) {
+	bool Texture::Load2DFromMemory(const unsigned char *filedata, size_t size) {
 		_type = TextureType::TEXTURE2D;
 
 		if (_pixels != nullptr) {
