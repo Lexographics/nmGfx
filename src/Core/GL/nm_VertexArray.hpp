@@ -31,7 +31,7 @@ namespace nmGfx
 				nmGfx::AttributeType type;
 				uint32_t slot;
 
-				bool operator<(const Attribute& other)
+				bool operator<(const Attribute& other) const
 				{
 					return slot < other.slot;
 				}
